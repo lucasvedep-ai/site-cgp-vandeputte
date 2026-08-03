@@ -64,12 +64,32 @@ Lucas Vandeputte, Conseiller en Gestion de Patrimoine (CGP) en lancement, affili
 
 À terme : remplacer par des URLs hébergées pour alléger le fichier.
 
-## 7. Formulaire — pipeline prévu (pas encore branché)
+## 7. Formulaire — pipeline
 
 ```
-Formulaire site → Google Form (mêmes champs) → Google Sheets
-→ n8n (polling) → Vivier Prospects Google Sheets
+Formulaire site (branché ✅) → Google Form → Sheet "Formulaire_Site_Reponses_Brutes"
+→ n8n (polling, à construire) → Vivier Prospects Google Sheets (onglet Prospects)
 ```
+
+**✅ Branché** : le formulaire du site poste silencieusement (`fetch` en mode `no-cors`) vers l'endpoint `formResponse` du Google Form à chaque soumission, sans changer le design ni l'UX du site. Le visiteur ne voit jamais le Google Form.
+
+- Google Form : `https://docs.google.com/forms/d/e/1FAIpQLSdVCRtCaE4jloVGGWT-sjlfEtJZNzvZBScijKqcw6GSVWp8Rg/`
+- Sheet de réponses brutes : `Formulaire_Site_Reponses_Brutes` (dossier Drive `Prospects`)
+- Mapping champ site → `entry.XXXXX` (obtenu via un lien prérempli de test, un identifiant par champ) :
+
+| Champ | entry ID |
+|---|---|
+| Prénom | `entry.2035234336` |
+| Nom | `entry.188678542` |
+| Téléphone | `entry.1816082128` |
+| Email | `entry.548477793` |
+| Votre situation | `entry.1980637434` |
+| Canal source | `entry.254791585` |
+| Je viens de la part de qui ? | `entry.607530339` |
+| Votre besoin | `entry.567632254` |
+| Opt-in (case cochée envoyée comme `"Oui"`) | `entry.1741620044` |
+
+**⏳ Reste à construire** : le n8n qui lit les nouvelles lignes de `Formulaire_Site_Reponses_Brutes` et les ajoute dans l'onglet `Prospects` du Vivier Prospects (mapping vers les colonnes AH→AL, `Besoin` fusionné dans `Notes` avec le préfixe `Besoin initial (site) : ...`, `Source = "Site internet"`).
 
 - **Canal source** (8 options) : Recommandation d'un proche / QR code / Carte NFC / Site internet / Réseaux sociaux / Salon ou événement / Bouche à oreille sport / Autre
 - **Je viens de la part de qui ?** (champ texte libre, optionnel) : n'apparaît que si "Recommandation d'un proche" est sélectionné dans le canal source (affichage conditionnel en JS, champ vidé si l'utilisateur change d'avis). Objectif : dans le Vivier Prospects, deux colonnes distinctes — le canal (ex. "Recommandation d'un proche") ET le nom du recommandeur — pour visualiser qui apporte le plus de prospects. Chaque champ de formulaire devient sa propre colonne dans Google Sheets indépendamment de sa visibilité conditionnelle sur le site : le fait qu'il soit caché par défaut ne change rien à la structure de données obtenue. À reporter comme colonne dédiée (ex. `Nom recommandeur`) dans le Vivier Prospects lors de la mise en place du pipeline n8n.
@@ -156,3 +176,4 @@ Les prospects du site auront `Source = "Site internet"` (au lieu de "Google Maps
 | **V1.4** | 2026-08-03 | Le champ "Je viens de la part de qui ?" devient conditionnel : masqué par défaut, il n'apparaît (et ne se vide si on change d'avis) que lorsque "Recommandation d'un proche" est sélectionné dans le canal source — évite de le proposer aux visiteurs venus par un autre canal. |
 | — | 2026-08-03 | (Pas de version du site) Documentation de la structure cible du Vivier Prospects : 6 colonnes à ajouter (`Email`, `Situation`, `Canal source`, `Recommandé par`, `Besoin`, `Opt-in téléphonique`), sans impact sur le scénario Make existant (mapping par nom de colonne confirmé). Action en attente côté Lucas. |
 | — | 2026-08-03 | (Pas de version du site) `Besoin` retiré des nouvelles colonnes : fusionné dans la colonne `Notes` existante (préfixe `Besoin initial (site) : ...`) plutôt qu'une colonne dédiée. Seules 5 colonnes restent à ajouter (`Email`, `Situation`, `Canal source`, `Recommandé par`, `Opt-in téléphonique`). |
+| **V1.5** | 2026-08-03 | Formulaire du site branché sur le Google Form créé par Lucas : envoi silencieux (`fetch` no-cors) vers l'endpoint `formResponse` à chaque soumission, mapping de chaque champ vérifié via lien prérempli de test. Design et UX du site inchangés, le visiteur ne voit jamais le Google Form. Reste à construire : le n8n qui transfère les réponses vers le Vivier Prospects. |
