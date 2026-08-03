@@ -91,7 +91,7 @@ Statut pipeline, Date 1er appel, Résultat 1er appel, Date R1, Statut R1, Date R
 Date R3, Statut R3, Date R4, Statut R4, Date signature, Priorité, Date de relance, Prochaine action, Notes
 ```
 
-**Colonnes à ajouter (AH→AM)** pour accueillir les prospects du site, sans toucher aux colonnes existantes — ⏳ **action en attente côté Lucas** (ajout manuel des en-têtes, je n'ai pas d'accès en écriture aux Google Sheets) :
+**Colonnes à ajouter (AH→AL)** pour accueillir les prospects du site, sans toucher aux colonnes existantes — ⏳ **action en attente côté Lucas** (ajout manuel des en-têtes, je n'ai pas d'accès en écriture aux Google Sheets) :
 
 | Colonne | En-tête |
 |---|---|
@@ -99,8 +99,9 @@ Date R3, Statut R3, Date R4, Statut R4, Date signature, Priorité, Date de relan
 | AI | `Situation` |
 | AJ | `Canal source` |
 | AK | `Recommandé par` |
-| AL | `Besoin` |
-| AM | `Opt-in téléphonique` |
+| AL | `Opt-in téléphonique` |
+
+Le champ **"Besoin"** du formulaire (message initial du prospect) n'a **pas** sa propre colonne — il est fusionné dans la colonne `Notes` existante, préfixé pour rester identifiable : `Besoin initial (site) : <message>`. Ainsi le message d'origine du prospect et les notes de suivi que Lucas ajoute après appel/RDV cohabitent dans la même colonne, sans se confondre.
 
 Les prospects du site auront `Source = "Site internet"` (au lieu de "Google Maps"), pour rester filtrables dans la même colonne `Source` déjà existante. Une fois qualifiés (1er appel et au-delà), ils suivent exactement le même tunnel que les prospects scrapés (`Statut pipeline` → `Date R1..R4` → `Date signature` → `Notes`), sans doublon de suivi.
 
@@ -127,7 +128,7 @@ Les prospects du site auront `Source = "Site internet"` (au lieu de "Google Maps
 - [ ] Nom exact de la formation CGP + organisme RNCP
 
 ### Technique
-- [ ] Lucas : ajouter les 6 colonnes `Email`/`Situation`/`Canal source`/`Recommandé par`/`Besoin`/`Opt-in téléphonique` dans le Vivier Prospects (voir section 8)
+- [ ] Lucas : ajouter les 5 colonnes `Email`/`Situation`/`Canal source`/`Recommandé par`/`Opt-in téléphonique` dans le Vivier Prospects (voir section 8)
 - [ ] Brancher le formulaire sur Google Form / pipeline n8n
 - [ ] Remplacer les images base64 par des URLs hébergées (allègement du fichier)
 - [ ] Affiner le responsive sur très petit mobile
@@ -154,3 +155,4 @@ Les prospects du site auront `Source = "Site internet"` (au lieu de "Google Maps
 | **V1.3** | 2026-08-03 | Ajout au formulaire de contact du champ optionnel "Je viens de la part de…" (texte libre), pour tracer qui a recommandé chaque prospect passé par le site. À reporter dans le Google Form (en cours de mise en place) et dans le Vivier Prospects comme colonne `Recommandé par`. |
 | **V1.4** | 2026-08-03 | Le champ "Je viens de la part de qui ?" devient conditionnel : masqué par défaut, il n'apparaît (et ne se vide si on change d'avis) que lorsque "Recommandation d'un proche" est sélectionné dans le canal source — évite de le proposer aux visiteurs venus par un autre canal. |
 | — | 2026-08-03 | (Pas de version du site) Documentation de la structure cible du Vivier Prospects : 6 colonnes à ajouter (`Email`, `Situation`, `Canal source`, `Recommandé par`, `Besoin`, `Opt-in téléphonique`), sans impact sur le scénario Make existant (mapping par nom de colonne confirmé). Action en attente côté Lucas. |
+| — | 2026-08-03 | (Pas de version du site) `Besoin` retiré des nouvelles colonnes : fusionné dans la colonne `Notes` existante (préfixe `Besoin initial (site) : ...`) plutôt qu'une colonne dédiée. Seules 5 colonnes restent à ajouter (`Email`, `Situation`, `Canal source`, `Recommandé par`, `Opt-in téléphonique`). |
