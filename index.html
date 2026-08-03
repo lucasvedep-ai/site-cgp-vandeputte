@@ -54,6 +54,34 @@ nav{
   white-space:nowrap;
 }
 .nav-cta:hover{background:var(--or-pale);transform:translateY(-1px)}
+.nav-toggle{
+  display:none;background:none;border:none;cursor:pointer;
+  width:44px;height:44px;flex-shrink:0;
+  flex-direction:column;align-items:center;justify-content:center;gap:5px;
+}
+.nav-toggle span{display:block;width:22px;height:2px;background:var(--or);transition:transform .25s ease,opacity .2s ease}
+.nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.nav-mobile-panel{
+  display:none;position:fixed;left:0;right:0;top:68px;z-index:99;
+  background:var(--bleu2);
+  border-bottom:1px solid rgba(201,168,76,0.15);
+  flex-direction:column;padding:4px 5% 12px;
+  max-height:calc(100vh - 68px);overflow-y:auto;
+  box-shadow:0 16px 32px rgba(11,31,58,0.25);
+}
+.nav-mobile-panel.active{display:flex}
+.nav-mobile-panel a{
+  color:rgba(255,255,255,0.8);text-decoration:none;
+  font-size:15px;letter-spacing:0.3px;
+  padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.nav-mobile-panel a:last-child{border-bottom:none}
+.nav-mobile-panel a.nav-mobile-tel{color:var(--or);font-weight:600}
+@media (prefers-reduced-motion:reduce){
+  .nav-toggle span{transition:none}
+}
 
 /* ─── HERO ─────────────────────────────────────────────────── */
 .hero{
@@ -556,6 +584,8 @@ footer{
   .nav-links{display:none}
   .nav-logo-sub{display:none}
   .nav-cta{padding:8px 14px;font-size:12px}
+  .nav-toggle{display:flex}
+  .nav-mobile-panel{top:60px}
   .hero{padding:80px 4% 60px}
   .hero-split{grid-template-columns:1fr;gap:32px}
   .hero-photo-wrap{aspect-ratio:4/3;min-height:auto;order:1}
@@ -616,7 +646,19 @@ footer{
     <a href="tel:0645530202" style="color:var(--or);font-weight:500">06 45 53 02 02</a>
   </div>
   <a href="#contact" class="nav-cta">Bilan gratuit →</a>
+  <button type="button" class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navMobilePanel">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="nav-mobile-panel" id="navMobilePanel">
+  <a href="#services">Services</a>
+  <a href="#pourquoi">Pourquoi un CGP ?</a>
+  <a href="#processus">Comment ça marche</a>
+  <a href="#about">À propos</a>
+  <a href="#temoignages">Témoignages</a>
+  <a href="#contact">Contact</a>
+  <a href="tel:0645530202" class="nav-mobile-tel">06 45 53 02 02</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -1257,6 +1299,29 @@ document.getElementById('contactForm').addEventListener('submit',function(e){
   this.style.display='none';
   document.getElementById('formSuccess').style.display='block';
 });
+</script>
+<script>
+// ── MENU MOBILE ──────────────────────────────────────────────────────────
+(function(){
+  const toggle = document.getElementById('navToggle');
+  const panel = document.getElementById('navMobilePanel');
+  if(!toggle || !panel) return;
+  function closeMenu(){
+    panel.classList.remove('active');
+    toggle.setAttribute('aria-expanded','false');
+  }
+  toggle.addEventListener('click',function(){
+    const willOpen = !panel.classList.contains('active');
+    panel.classList.toggle('active', willOpen);
+    toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+  });
+  panel.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', closeMenu);
+  });
+  window.addEventListener('resize', function(){
+    if(window.innerWidth > 768) closeMenu();
+  });
+})();
 </script>
 <script>
 // ── PARTICULES ──────────────────────────────────────────────────────────
