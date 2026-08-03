@@ -371,6 +371,22 @@ section{padding:96px 5%}
 .form-group textarea{resize:vertical;min-height:100px}
 .form-group .req{color:var(--or)}
 .form-group select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230B1F3A' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.form-checkbox{
+  appearance:none;-webkit-appearance:none;
+  width:24px;height:24px;padding:0;flex-shrink:0;margin-top:0;
+  border:1.5px solid rgba(11,31,58,0.3);border-radius:5px;
+  background:#fff;cursor:pointer;position:relative;
+  transition:background .15s,border-color .15s;
+}
+.form-checkbox:checked{background:var(--bleu);border-color:var(--bleu)}
+.form-checkbox:checked::after{
+  content:'';position:absolute;left:8px;top:4px;
+  width:6px;height:11px;
+  border:solid #fff;border-width:0 2px 2px 0;
+  transform:rotate(45deg);
+}
+.form-checkbox:focus-visible{outline:2px solid var(--or);outline-offset:2px}
+.form-optin-row{cursor:pointer}
 .btn-submit{
   width:100%;padding:16px;
   background:var(--bleu);color:#fff;
@@ -1279,8 +1295,8 @@ footer{
           <label for="besoin">Votre besoin (optionnel)</label>
           <textarea id="besoin" placeholder="Dites-moi en quelques mots ce qui vous amène..."></textarea>
         </div>
-        <div class="form-group" style="flex-direction:row;align-items:flex-start;gap:12px;background:rgba(11,31,58,0.03);border:1px solid rgba(11,31,58,0.08);border-radius:4px;padding:14px 16px;margin-top:4px">
-          <input type="checkbox" id="optin" required style="margin-top:3px;flex-shrink:0;width:16px;height:16px;accent-color:#0B1F3A;cursor:pointer">
+        <div class="form-group form-optin-row" id="optinRow" style="flex-direction:row;align-items:flex-start;gap:12px;background:rgba(11,31,58,0.03);border:1px solid rgba(11,31,58,0.08);border-radius:4px;padding:14px 16px;margin-top:4px">
+          <input type="checkbox" id="optin" class="form-checkbox" required>
           <label for="optin" style="font-size:13px;color:#5a6278;line-height:1.6;cursor:pointer;font-weight:400">
             J'accepte d'être contacté(e) par téléphone par <strong style="color:#0B1F3A">Lucas Vandeputte</strong>, Conseiller en Gestion de Patrimoine, dans le cadre de ma demande de bilan patrimonial. Je confirme que les informations renseignées me concernent personnellement. <span style="color:#c8253c">*</span>
           </label>
@@ -1316,6 +1332,19 @@ footer{
   </div>
 </footer>
 
+<script>
+// ── ZONE DE CLIC ÉLARGIE POUR L'OPT-IN (toute la ligne, pas juste la case) ─
+(function(){
+  var row = document.getElementById('optinRow');
+  var input = document.getElementById('optin');
+  if(!row || !input) return;
+  row.addEventListener('click', function(e){
+    if(e.target.closest('label') || e.target === input) return;
+    input.checked = !input.checked;
+    input.dispatchEvent(new Event('change', {bubbles:true}));
+  });
+})();
+</script>
 <script>
 // ── ENVOI SILENCIEUX VERS GOOGLE FORM ────────────────────────────────────
 (function(){
