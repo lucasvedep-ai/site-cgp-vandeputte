@@ -1271,9 +1271,9 @@ footer{
             <option>Autre</option>
           </select>
         </div>
-        <div class="form-group">
-          <label for="recommande_par">Je viens de la part de… (optionnel)</label>
-          <input type="text" id="recommande_par" placeholder="Nom de la personne qui vous a recommandé">
+        <div class="form-group" id="recommandeWrap" style="display:none">
+          <label for="recommande_par">Je viens de la part de qui ? (optionnel)</label>
+          <input type="text" id="recommande_par" placeholder="Nom et prénom de la personne qui vous a recommandé">
         </div>
         <div class="form-group">
           <label for="besoin">Votre besoin (optionnel)</label>
@@ -1322,6 +1322,22 @@ document.getElementById('contactForm').addEventListener('submit',function(e){
   this.style.display='none';
   document.getElementById('formSuccess').style.display='block';
 });
+</script>
+<script>
+// ── AFFICHAGE CONDITIONNEL "RECOMMANDE PAR" ──────────────────────────────
+(function(){
+  const canal = document.getElementById('canal');
+  const wrap = document.getElementById('recommandeWrap');
+  const input = document.getElementById('recommande_par');
+  if(!canal || !wrap || !input) return;
+  function sync(){
+    const isRecommandation = canal.value === "Recommandation d'un proche";
+    wrap.style.display = isRecommandation ? 'flex' : 'none';
+    if(!isRecommandation) input.value = '';
+  }
+  canal.addEventListener('change', sync);
+  sync();
+})();
 </script>
 <script>
 // ── MENU MOBILE ──────────────────────────────────────────────────────────
