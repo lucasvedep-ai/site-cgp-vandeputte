@@ -1317,11 +1317,44 @@ footer{
 </footer>
 
 <script>
-document.getElementById('contactForm').addEventListener('submit',function(e){
-  e.preventDefault();
-  this.style.display='none';
-  document.getElementById('formSuccess').style.display='block';
-});
+// ── ENVOI SILENCIEUX VERS GOOGLE FORM ────────────────────────────────────
+(function(){
+  var GOOGLE_FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSdVCRtCaE4jloVGGWT-sjlfEtJZNzvZBScijKqcw6GSVWp8Rg/formResponse';
+  var ENTRY_IDS = {
+    prenom: 'entry.2035234336',
+    nom: 'entry.188678542',
+    tel: 'entry.1816082128',
+    email: 'entry.548477793',
+    situation: 'entry.1980637434',
+    canal: 'entry.254791585',
+    recommande_par: 'entry.607530339',
+    besoin: 'entry.567632254'
+  };
+  var OPTIN_ENTRY_ID = 'entry.1741620044';
+
+  document.getElementById('contactForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var form = this;
+
+    var params = new URLSearchParams();
+    Object.keys(ENTRY_IDS).forEach(function(fieldId){
+      var el = document.getElementById(fieldId);
+      if(el && el.value) params.append(ENTRY_IDS[fieldId], el.value);
+    });
+    var optinEl = document.getElementById('optin');
+    if(optinEl && optinEl.checked) params.append(OPTIN_ENTRY_ID, 'Oui');
+
+    fetch(GOOGLE_FORM_ACTION, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: params.toString()
+    }).catch(function(){});
+
+    form.style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  });
+})();
 </script>
 <script>
 // ── AFFICHAGE CONDITIONNEL "RECOMMANDE PAR" ──────────────────────────────
