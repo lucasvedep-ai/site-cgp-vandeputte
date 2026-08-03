@@ -76,7 +76,37 @@ Formulaire site → Google Form (mêmes champs) → Google Sheets
 - **Opt-in téléphonique** obligatoire, conforme loi n°2025-594 (effective août 2026)
 - Choix polling Sheets plutôt que webhook direct pour éviter l'exposition d'un localhost
 
-## 8. Décisions actées (à ne pas remettre en question)
+## 8. Vivier Prospects — structure & intégration
+
+Fichier existant : `Vivier_Prospects` (Google Sheets, dossier Drive `Prospects`), déjà en production. Il centralise tout le pipeline commercial de Lucas, alimenté par deux sources :
+
+- **Scraping sortant** (Google Maps par zone géographique + métier ciblé, via le scénario Make **"AUTO vivier Prospect"**, bientôt migré vers n8n) → prospects B2B (artisans, professions libérales)
+- **Formulaire du site** (à venir) → prospects B2C entrants, qualifiés eux-mêmes
+
+**Structure actuelle de l'onglet `Prospects`** (colonnes A→AG, 33 colonnes) :
+```
+ID, Date d'ajout, Nom, Prénom, Entreprise, Niche, Secteur, Téléphone, Site web, Adresse, Ville,
+Code postal, Min depuis Lorient, Min depuis Quimperlé, Min depuis Moëlan, Source, SIRET,
+Statut pipeline, Date 1er appel, Résultat 1er appel, Date R1, Statut R1, Date R2, Statut R2,
+Date R3, Statut R3, Date R4, Statut R4, Date signature, Priorité, Date de relance, Prochaine action, Notes
+```
+
+**Colonnes à ajouter (AH→AM)** pour accueillir les prospects du site, sans toucher aux colonnes existantes — ⏳ **action en attente côté Lucas** (ajout manuel des en-têtes, je n'ai pas d'accès en écriture aux Google Sheets) :
+
+| Colonne | En-tête |
+|---|---|
+| AH | `Email` |
+| AI | `Situation` |
+| AJ | `Canal source` |
+| AK | `Recommandé par` |
+| AL | `Besoin` |
+| AM | `Opt-in téléphonique` |
+
+Les prospects du site auront `Source = "Site internet"` (au lieu de "Google Maps"), pour rester filtrables dans la même colonne `Source` déjà existante. Une fois qualifiés (1er appel et au-delà), ils suivent exactement le même tunnel que les prospects scrapés (`Statut pipeline` → `Date R1..R4` → `Date signature` → `Notes`), sans doublon de suivi.
+
+**Vérifié le 2026-08-03** : le module Make `google-sheets:addRow` du scénario "AUTO vivier Prospect" a le paramètre `useColumnHeaders: true` (mapping par nom de colonne, pas par position). Ajouter ces 6 colonnes, dans n'importe quel ordre ou position, ne casse donc pas l'automatisation existante — elle continuera de viser uniquement les colonnes qu'elle connaît par leur nom exact.
+
+## 9. Décisions actées (à ne pas remettre en question)
 
 - **À propos en texte narratif** — les bullet points y feraient "cheap", la longueur crée la confiance
 - **Scraping = outil de fond, pas stratégie principale** — bouche à oreille et prescripteurs restent le cœur de l'acquisition
@@ -84,7 +114,7 @@ Formulaire site → Google Form (mêmes champs) → Google Sheets
 - **Formulaire → n8n via Google Forms** (polling Sheets), pas de webhook direct
 - **Logo LV D1 + typo Cinzel** — identité visuelle finale
 
-## 9. Reste à faire
+## 10. Reste à faire
 
 ### Contenu (à fournir par Lucas)
 - [ ] N° ORIAS personnel (badges, footer, carte de visite)
@@ -97,13 +127,14 @@ Formulaire site → Google Form (mêmes champs) → Google Sheets
 - [ ] Nom exact de la formation CGP + organisme RNCP
 
 ### Technique
+- [ ] Lucas : ajouter les 6 colonnes `Email`/`Situation`/`Canal source`/`Recommandé par`/`Besoin`/`Opt-in téléphonique` dans le Vivier Prospects (voir section 8)
 - [ ] Brancher le formulaire sur Google Form / pipeline n8n
 - [ ] Remplacer les images base64 par des URLs hébergées (allègement du fichier)
 - [ ] Affiner le responsive sur très petit mobile
 - [ ] Compléter les mentions légales (RGPD, ORIAS, MIA)
 - [ ] SEO : balises meta, title, description, Open Graph
 
-## 10. Manière de travailler avec Lucas
+## 11. Manière de travailler avec Lucas
 
 - Français, ton oral, direct
 - Un pas à la fois — valider avant d'avancer
@@ -122,3 +153,4 @@ Formulaire site → Google Form (mêmes champs) → Google Sheets
 | **V1.2** | 2026-08-03 | Correction du tableau comparatif "Pourquoi un CGP" sur mobile : il fallait dézoomer ou scroller latéralement pour voir la colonne "CGP courtier". Le tableau se transforme désormais en cartes empilées sous 768px (un bloc par critère, les 3 réponses les unes sous les autres avec libellé), sans aucun scroll ni zoom nécessaire. Le tableau desktop/tablette est inchangé. |
 | **V1.3** | 2026-08-03 | Ajout au formulaire de contact du champ optionnel "Je viens de la part de…" (texte libre), pour tracer qui a recommandé chaque prospect passé par le site. À reporter dans le Google Form (en cours de mise en place) et dans le Vivier Prospects comme colonne `Recommandé par`. |
 | **V1.4** | 2026-08-03 | Le champ "Je viens de la part de qui ?" devient conditionnel : masqué par défaut, il n'apparaît (et ne se vide si on change d'avis) que lorsque "Recommandation d'un proche" est sélectionné dans le canal source — évite de le proposer aux visiteurs venus par un autre canal. |
+| — | 2026-08-03 | (Pas de version du site) Documentation de la structure cible du Vivier Prospects : 6 colonnes à ajouter (`Email`, `Situation`, `Canal source`, `Recommandé par`, `Besoin`, `Opt-in téléphonique`), sans impact sur le scénario Make existant (mapping par nom de colonne confirmé). Action en attente côté Lucas. |
