@@ -72,6 +72,7 @@ Formulaire site → Google Form (mêmes champs) → Google Sheets
 ```
 
 - **Canal source** (8 options) : Recommandation d'un proche / QR code / Carte NFC / Site internet / Réseaux sociaux / Salon ou événement / Bouche à oreille sport / Autre
+- **Je viens de la part de…** (champ texte libre, optionnel, ajouté après le canal source) : nom de la personne qui a recommandé le prospect. Objectif : dans le Vivier Prospects, pouvoir croiser deux infos — "passé par le site" (canal) ET "recommandé par X" — pour identifier les prospects venus du site *grâce à* une recommandation précise. À reporter comme colonne dédiée (ex. `Recommandé par`) dans le Vivier Prospects lors de la mise en place du pipeline n8n.
 - **Opt-in téléphonique** obligatoire, conforme loi n°2025-594 (effective août 2026)
 - Choix polling Sheets plutôt que webhook direct pour éviter l'exposition d'un localhost
 
@@ -119,3 +120,4 @@ Formulaire site → Google Form (mêmes champs) → Google Sheets
 | **V1** | 2026-08-03 | Import initial du site de référence (`index.html`, palette bleu nuit + or, 1349 lignes) transmis via la note de passation. Mise en place du dépôt et du présent suivi de projet. Aucune modification de contenu à ce stade — reprise à l'identique de la V1 validée en amont. |
 | **V1.1** | 2026-08-03 | Site hébergé publiquement sur GitHub Pages : `https://lucasvedep-ai.github.io/site-cgp-vandeputte/`. Correction responsive : le menu de navigation disparaissait entièrement sur mobile/tablette (<768px) sans moyen de le rouvrir — ajout d'un vrai menu hamburger (bouton + panneau déroulant avec les mêmes liens + téléphone). Testé sans débordement horizontal sur iPhone SE, iPhone standard, Samsung, tablette portrait/paysage, laptop et desktop. |
 | **V1.2** | 2026-08-03 | Correction du tableau comparatif "Pourquoi un CGP" sur mobile : il fallait dézoomer ou scroller latéralement pour voir la colonne "CGP courtier". Le tableau se transforme désormais en cartes empilées sous 768px (un bloc par critère, les 3 réponses les unes sous les autres avec libellé), sans aucun scroll ni zoom nécessaire. Le tableau desktop/tablette est inchangé. |
+| **V1.3** | 2026-08-03 | Ajout au formulaire de contact du champ optionnel "Je viens de la part de…" (texte libre), pour tracer qui a recommandé chaque prospect passé par le site. À reporter dans le Google Form (en cours de mise en place) et dans le Vivier Prospects comme colonne `Recommandé par`. |
