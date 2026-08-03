@@ -601,9 +601,28 @@ footer{
   .contact-inner{grid-template-columns:1fr;gap:40px}
   .form-row{grid-template-columns:1fr}
   .form-card{padding:24px}
-  .why-table-wrap{border-radius:4px}
-  .why-table{font-size:12px;min-width:560px}
-  .why-table td,.why-table th{padding:10px 10px}
+  .why-table-wrap{border-radius:8px;overflow-x:visible;border:none}
+  .why-table{width:100%;min-width:0;font-size:14px;border-spacing:0 12px;border-collapse:separate}
+  .why-table thead{display:none}
+  .why-table tbody tr{
+    display:block;border:1px solid rgba(11,31,58,0.1);border-radius:8px;overflow:hidden;
+  }
+  .why-table tbody tr:hover{background:none}
+  .why-table td{display:block;padding:12px 16px 12px 44%;position:relative;min-height:20px}
+  .why-table td:first-child{
+    padding:14px 16px;background:var(--bleu);color:#fff;
+    font-family:'Playfair Display',serif;font-weight:600;font-size:15px;
+  }
+  .why-table td:not(:first-child){border-top:1px solid rgba(11,31,58,0.07)}
+  .why-table td:not(:first-child):before{
+    content:attr(data-label);
+    position:absolute;left:16px;top:12px;width:38%;
+    font-size:10.5px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;color:var(--texte-sec);
+    line-height:1.4;
+  }
+  .why-table td.col-you{background:rgba(201,168,76,0.06);border-left:none;border-right:none}
+  .why-table td.col-you:before{color:var(--or)}
+  .why-table tbody tr:last-child td.col-you{border-bottom:none}
   .coords-inner{grid-template-columns:1fr;gap:12px}
   .testimonials-grid{grid-template-columns:1fr}
   .services-grid{grid-template-columns:1fr}
@@ -823,45 +842,45 @@ footer{
       <tbody>
         <tr>
           <td>Accès aux produits</td>
-          <td><span class="cross">✗</span>Limité à ce que vous connaissez</td>
-          <td><span class="cross">✗</span>Produits maison uniquement</td>
-          <td class="col-you"><span class="check">✓</span>Partenaires rigoureusement sélectionnés — les meilleurs pour <em>vous</em></td>
+          <td data-label="Seul"><span class="cross">✗</span>Limité à ce que vous connaissez</td>
+          <td data-label="Conseiller bancaire"><span class="cross">✗</span>Produits maison uniquement</td>
+          <td class="col-you" data-label="✦ CGP courtier (Lucas)"><span class="check">✓</span>Partenaires rigoureusement sélectionnés — les meilleurs pour <em>vous</em></td>
         </tr>
         <tr>
           <td>Conflit d'intérêt</td>
-          <td><span class="neutral">—</span>Aucun</td>
-          <td><span class="cross">✗</span>Objectifs commerciaux internes</td>
-          <td class="col-you"><span class="check">✓</span>Aucun — rémunéré par la compagnie retenue pour vous</td>
+          <td data-label="Seul"><span class="neutral">—</span>Aucun</td>
+          <td data-label="Conseiller bancaire"><span class="cross">✗</span>Objectifs commerciaux internes</td>
+          <td class="col-you" data-label="✦ CGP courtier (Lucas)"><span class="check">✓</span>Aucun — rémunéré par la compagnie retenue pour vous</td>
         </tr>
         <tr>
           <td>Analyse patrimoniale</td>
-          <td><span class="cross">✗</span>Partielle ou inexistante</td>
-          <td><span class="cross">✗</span>Limitée aux produits proposés</td>
-          <td class="col-you"><span class="check">✓</span>Globale — tous les piliers de votre patrimoine</td>
+          <td data-label="Seul"><span class="cross">✗</span>Partielle ou inexistante</td>
+          <td data-label="Conseiller bancaire"><span class="cross">✗</span>Limitée aux produits proposés</td>
+          <td class="col-you" data-label="✦ CGP courtier (Lucas)"><span class="check">✓</span>Globale — tous les piliers de votre patrimoine</td>
         </tr>
         <tr>
           <td>Conseil personnalisé</td>
-          <td><span class="cross">✗</span>Autodidacte, risques d'erreurs</td>
-          <td><span class="neutral">—</span>Générique, basé sur votre segment</td>
-          <td class="col-you"><span class="check">✓</span>Sur-mesure, adapté à votre profil exact</td>
+          <td data-label="Seul"><span class="cross">✗</span>Autodidacte, risques d'erreurs</td>
+          <td data-label="Conseiller bancaire"><span class="neutral">—</span>Générique, basé sur votre segment</td>
+          <td class="col-you" data-label="✦ CGP courtier (Lucas)"><span class="check">✓</span>Sur-mesure, adapté à votre profil exact</td>
         </tr>
         <tr>
           <td>Disponibilité</td>
-          <td><span class="neutral">—</span>Dépend de vous</td>
-          <td><span class="cross">✗</span>File d'attente, rotation fréquente</td>
-          <td class="col-you"><span class="check">✓</span>Interlocuteur unique, joignable directement</td>
+          <td data-label="Seul"><span class="neutral">—</span>Dépend de vous</td>
+          <td data-label="Conseiller bancaire"><span class="cross">✗</span>File d'attente, rotation fréquente</td>
+          <td class="col-you" data-label="✦ CGP courtier (Lucas)"><span class="check">✓</span>Interlocuteur unique, joignable directement</td>
         </tr>
         <tr>
           <td>Coût pour vous</td>
-          <td><span class="neutral">—</span>Gratuit</td>
-          <td><span class="neutral">—</span>Gratuit</td>
-          <td class="col-you"><span class="check">✓</span>Gratuit — rémunération prise en charge par les compagnies</td>
+          <td data-label="Seul"><span class="neutral">—</span>Gratuit</td>
+          <td data-label="Conseiller bancaire"><span class="neutral">—</span>Gratuit</td>
+          <td class="col-you" data-label="✦ CGP courtier (Lucas)"><span class="check">✓</span>Gratuit — rémunération prise en charge par les compagnies</td>
         </tr>
         <tr>
           <td>Suivi dans le temps</td>
-          <td><span class="cross">✗</span>Vous seul</td>
-          <td><span class="cross">✗</span>Aléatoire selon l'agence</td>
-          <td class="col-you"><span class="check">✓</span>Proactif — je reviens vers vous si la situation change</td>
+          <td data-label="Seul"><span class="cross">✗</span>Vous seul</td>
+          <td data-label="Conseiller bancaire"><span class="cross">✗</span>Aléatoire selon l'agence</td>
+          <td class="col-you" data-label="✦ CGP courtier (Lucas)"><span class="check">✓</span>Proactif — je reviens vers vous si la situation change</td>
         </tr>
       </tbody>
     </table>
