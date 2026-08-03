@@ -67,11 +67,13 @@ Lucas Vandeputte, Conseiller en Gestion de Patrimoine (CGP) en lancement, affili
 ## 7. Formulaire — pipeline
 
 ```
-Formulaire site (branché ✅) → Google Form → Sheet "Formulaire_Site_Reponses_Brutes"
+Formulaire site (branché ✅) → Google Form → Sheet "Formulaire_Site_Reponses_Brutes" (vérifié ✅)
 → n8n (polling, à construire) → Vivier Prospects Google Sheets (onglet Prospects)
 ```
 
-**✅ Branché** : le formulaire du site poste silencieusement (`fetch` en mode `no-cors`) vers l'endpoint `formResponse` du Google Form à chaque soumission, sans changer le design ni l'UX du site. Le visiteur ne voit jamais le Google Form.
+**✅ Branché et vérifié en conditions réelles (03/08/2026)** : le formulaire du site poste silencieusement (`fetch` en mode `no-cors`) vers l'endpoint `formResponse` du Google Form à chaque soumission, sans changer le design ni l'UX du site. Le visiteur ne voit jamais le Google Form. Deux soumissions réelles depuis le site confirmées dans le Sheet, tous champs correctement mappés.
+
+**Piège rencontré et résolu** : le Google Form n'était ni partagé publiquement (accès Drive "Restreint" par défaut) ni **publié** (étape Google Forms distincte du partage Drive classique) — les deux blocaient toute soumission, silencieusement côté site puisque `no-cors` ne remonte aucune erreur. Pense-bête pour tout futur Google Form du projet : vérifier (1) le partage Drive en "Anyone"/public, et (2) que le formulaire est bien **publié** (bouton dédié, distinct du partage), avant de brancher quoi que ce soit dessus.
 
 - Google Form : `https://docs.google.com/forms/d/e/1FAIpQLSdVCRtCaE4jloVGGWT-sjlfEtJZNzvZBScijKqcw6GSVWp8Rg/`
 - Sheet de réponses brutes : `Formulaire_Site_Reponses_Brutes` (dossier Drive `Prospects`)
@@ -178,3 +180,4 @@ Les prospects du site auront `Source = "Site internet"` (au lieu de "Google Maps
 | — | 2026-08-03 | (Pas de version du site) `Besoin` retiré des nouvelles colonnes : fusionné dans la colonne `Notes` existante (préfixe `Besoin initial (site) : ...`) plutôt qu'une colonne dédiée. Seules 5 colonnes restent à ajouter (`Email`, `Situation`, `Canal source`, `Recommandé par`, `Opt-in téléphonique`). |
 | **V1.5** | 2026-08-03 | Formulaire du site branché sur le Google Form créé par Lucas : envoi silencieux (`fetch` no-cors) vers l'endpoint `formResponse` à chaque soumission, mapping de chaque champ vérifié via lien prérempli de test. Design et UX du site inchangés, le visiteur ne voit jamais le Google Form. Reste à construire : le n8n qui transfère les réponses vers le Vivier Prospects. |
 | **V1.6** | 2026-08-03 | Correction signalée sur iPad Safari : la case opt-in se cochait en interne mais ne l'affichait jamais visuellement (une règle CSS générique désactivait le rendu natif sans style de remplacement). Case redessinée en CSS, agrandie à 24px avec un vrai visuel coché, et toute la ligne rendue cliquable pour une meilleure cible tactile. |
+| — | 2026-08-03 | (Pas de version du site) Pipeline formulaire → Google Form → Sheet validé en conditions réelles : deux soumissions test depuis le site confirmées dans `Formulaire_Site_Reponses_Brutes`, tous champs correctement mappés. Cause du blocage initial identifiée et documentée : Google Form ni partagé publiquement ni publié (deux réglages distincts). |
