@@ -1242,6 +1242,7 @@ footer{
       </ul>
     </div>
     <div class="form-card">
+      <iframe name="hidden_google_form_target" style="display:none" title="envoi formulaire"></iframe>
       <form id="contactForm">
         <div class="form-row">
           <div class="form-group">
@@ -1365,20 +1366,32 @@ footer{
     e.preventDefault();
     var form = this;
 
-    var params = new URLSearchParams();
+    // Formulaire HTML reel soumis vers un iframe cache : evite fetch()/no-cors,
+    // que Google semble filtrer differemment d'une soumission de formulaire classique.
+    var hiddenForm = document.createElement('form');
+    hiddenForm.action = GOOGLE_FORM_ACTION;
+    hiddenForm.method = 'POST';
+    hiddenForm.target = 'hidden_google_form_target';
+    hiddenForm.style.display = 'none';
+
+    function addField(name, value){
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      hiddenForm.appendChild(input);
+    }
+
     Object.keys(ENTRY_IDS).forEach(function(fieldId){
       var el = document.getElementById(fieldId);
-      if(el && el.value) params.append(ENTRY_IDS[fieldId], el.value);
+      if(el && el.value) addField(ENTRY_IDS[fieldId], el.value);
     });
     var optinEl = document.getElementById('optin');
-    if(optinEl && optinEl.checked) params.append(OPTIN_ENTRY_ID, 'Oui');
+    if(optinEl && optinEl.checked) addField(OPTIN_ENTRY_ID, 'Oui');
 
-    fetch(GOOGLE_FORM_ACTION, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: params.toString()
-    }).catch(function(){});
+    document.body.appendChild(hiddenForm);
+    hiddenForm.submit();
+    hiddenForm.remove();
 
     form.style.display = 'none';
     document.getElementById('formSuccess').style.display = 'block';
