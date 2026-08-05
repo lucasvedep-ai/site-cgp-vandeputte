@@ -12,7 +12,7 @@ Lucas Vandeputte, Conseiller en Gestion de Patrimoine (CGP) en lancement, affili
 
 | Fichier | Description |
 |---|---|
-| `index.html` | Site principal — fichier autonome (HTML + CSS + JS + images en base64 intégrées). Palette bleu nuit + or. |
+| `index.html` | Site principal — fichier autonome (HTML + CSS + JS + images en base64 intégrées). Palette ardoise / laiton / mer depuis la V2.0. |
 | `docs/PASSATION_CLAUDE_CODE.pdf` | Note de passation reçue (contexte, décisions actées, reste à faire) — conservée comme référence historique. |
 | `SUIVI-PROJET.md` | Ce document — suivi d'avancement et historique des versions. |
 
@@ -20,22 +20,27 @@ Lucas Vandeputte, Conseiller en Gestion de Patrimoine (CGP) en lancement, affili
 
 ## 3. Identité visuelle
 
-**Palette (bleu nuit + or)** — décision finale actée :
+**Palette actuelle (ardoise / laiton / mer)** — depuis la V2.0 :
 ```css
---bleu: #0B1F3A       /* bleu nuit / "bleu roi" */
---or: #C9A84C          /* or champagne */
---gris-clair: #F4F6FA
---texte-sec: #5a6278
+--slate:   #2E3639   /* ardoise — fonds sombres, texte principal */
+--slate-d: #1F2528   /* ardoise foncée — hero, footer */
+--foam:    #EDE9E1   /* écume — fond clair principal */
+--foam-2:  #DFD9CE   /* écume soutenue — séparateurs, fonds alternés */
+--brass:   #9C8355   /* laiton — accent sur fond clair */
+--brass-l: #C4A97A   /* laiton clair — accent sur fond sombre */
+--sea:     #3D5A63   /* bleu mer — sections actualité et coordonnées */
 ```
 
-**Polices Google** : Playfair Display (titres), Inter (corps), Cinzel (logo LV, eyebrows).
+**Polices Google** : Fraunces (titres, serif à caractère) + Karla (corps, humaniste).
 
-**Logo LV** : SVG inline (polygon L or massif + path V blanc tracé + ligne or), présent en nav, footer, et placeholder À propos. Décision finale actée : Logo LV variante "D1" + typo Cinzel.
+**Logo LV** : SVG inline conservé depuis la V1 (polygon L + path V + ligne), simplement recoloré — L en laiton, V en ardoise sur fond clair / écume sur fond sombre. Présent en nav et footer.
+
+> **Historique** : la V1 utilisait bleu nuit `#0B1F3A` + or `#C9A84C` avec Playfair Display + Inter + Cinzel. Abandonné en V2.0 à la demande de Lucas : cette combinaison est devenue la signature visuelle par défaut des sites générés par IA, donc facilement identifiable comme telle — ce qui dessert un CGP qui vend de l'indépendance et du sur-mesure. Trois directions ont été maquettées (éditoriale sobre / ancrage breton / institutionnelle suisse), la seconde a été retenue.
 
 ## 4. Structure du site (ordre des sections)
 
-1. **NAV** fixe — logo LV, liens ancres, téléphone 06 45 53 02 02 en or
-2. **HERO** — split 50/50, accroche + 3 bullets + CTA, photo RDV (base64)
+1. **NAV** fixe — logo LV, liens ancres, téléphone en laiton, menu burger sous 768px
+2. **HERO** — photo pleine largeur avec dégradé (depuis la V2.0 ; split 50/50 en V1), accroche + CTA + 3 chiffres clés
 3. **ACTUALITÉ** — 3 cards (réforme retraites, éducation financière, inflation)
 4. **SERVICES** — 6 cards (épargne, retraite, protection, défiscalisation, immobilier, transmission)
 5. **POURQUOI UN CGP** — tableau comparatif Seul / Banque / CGP
@@ -44,16 +49,18 @@ Lucas Vandeputte, Conseiller en Gestion de Patrimoine (CGP) en lancement, affili
 8. **À PROPOS** — photo Lucas + texte narratif long (volontairement non condensé en bullets, voir décisions actées) + badges + stats Cap Finances
 9. **TÉMOIGNAGES** — 3 cards (actuellement fictifs, à remplacer)
 10. **COORDONNÉES** — 3 cards cliquables (tél, email, zone)
-11. **FORMULAIRE CONTACT** — Prénom*, Nom*, Téléphone*, Email, Situation, Canal source* (8 options), opt-in téléphonique obligatoire, besoin libre
+11. **FORMULAIRE CONTACT** — Prénom*, Nom*, Téléphone*, Email, Situation, Canal source* (8 options), « Je viens de la part de qui ? » (conditionnel), besoin libre, opt-in obligatoire
 12. **FOOTER** — mentions légales MIA, logo LV, liens
 
 ## 5. Fonctionnalités JS en place
 
-- Particules dorées animées dans le hero (canvas)
+- ~~Particules dorées dans le hero~~ — retirées en V2.0 (illisibles sur la photo pleine largeur). Le code JS subsiste mais ne s'active plus, faute de canvas dans la page.
 - Fade-up au scroll (IntersectionObserver) sur les cards
 - Compteurs animés (30 min / 100% / 24h + stats Cap Finances)
+- Menu burger mobile (ouverture/fermeture, fermeture au clic sur un lien)
+- Champ « Je viens de la part de qui ? » affiché conditionnellement selon le canal source
 - Validation du formulaire (champs requis + checkbox opt-in obligatoire)
-- Message de confirmation post-envoi (pas encore branché à un backend)
+- Envoi double à la soumission : webhook Make (instantané) + Google Form (archive), puis message de confirmation
 
 ## 6. Images embarquées (base64)
 
@@ -101,11 +108,34 @@ Formulaire site → Google Form → Sheet "Formulaire_Site_Reponses_Brutes"
 | Votre besoin | `entry.567632254` |
 | Opt-in (case cochée envoyée comme `"Oui"`) | `entry.1741620044` |
 
-### Scénario Make "Site -> Vivier Prospects" (id 6837081)
+### ⚠️ Ce qui casse (et ne casse pas) les automatisations
 
-Lit les nouvelles lignes de `Formulaire_Site_Reponses_Brutes` et les ajoute dans l'onglet `Prospects` du Vivier Prospects.
+Les automatisations reposent sur **quatre points d'accroche** — et sur rien d'autre :
 
-- **Fréquence** : toutes les 8 h (3×/jour), soit ~90 opérations/mois — très large dans le quota gratuit de 1 000/mois
+| Point d'accroche | Où |
+|---|---|
+| Les identifiants HTML des champs : `#prenom` `#nom` `#tel` `#email` `#situation` `#canal` `#recommande_par` `#besoin` `#optin` | `index.html` |
+| L'URL du webhook Make | `index.html` (constante `MAKE_WEBHOOK`) |
+| Les `entry.XXXXX` du Google Form | `index.html` (constante `ENTRY_IDS`) |
+| L'iframe d'archivage `hidden_google_form_target` | `index.html` |
+
+**Une refonte graphique ne casse rien** : la V2.0 a entièrement changé palette, polices et mise en page, les deux envois ont continué de fonctionner sans une seule modification côté Make ou Google Form (vérifié par interception des requêtes après refonte).
+
+**Ce qui casse, en revanche** : renommer un champ, en ajouter un, ou en supprimer un. Toute modification du formulaire doit être répercutée **aux trois endroits** — le site, le Google Form (qui génère un nouveau `entry.XXXXX`), et le mapping du scénario Make. Ne jamais modifier le Google Form seul.
+
+### Scénario Make "Site -> Vivier Prospects (instantané)" (id 6837179) — ACTIF
+
+Déclenché **par webhook** à chaque soumission du formulaire : le prospect arrive dans le Vivier en quelques secondes.
+
+- **Webhook** : `https://hook.eu1.make.com/6jfzyyk1vwtws5eu8yrqw8rqv1bw3ups` (structure de données `Formulaire site CGP - champs`, id 519266)
+- **Mapping** : par nom de champ JSON (`{{1.prenom}}`, `{{1.nom}}`…) — plus simple que la version polling
+- **Coût** : ~2 opérations par prospect, **zéro quand rien n'arrive** (contre ~90/mois de polling à vide)
+
+### Scénario de secours "Site -> Vivier Prospects" (id 6837081) — DÉSACTIVÉ
+
+Version par polling, conservée désactivée comme filet de sécurité : si le webhook tombe ou qu'une soumission est perdue, la réactiver permet de rattraper depuis l'archive `Formulaire_Site_Reponses_Brutes`. ⚠️ Ne pas l'activer en même temps que le webhook, sinon chaque prospect arrive **en double** dans le Vivier.
+
+- **Fréquence** : toutes les 8 h (3×/jour) si réactivé
 - **Mapping** : les champs Google Sheets arrivent **indexés par position** (`0` = Horodateur, `1` = Prénom, `2` = Nom, `3` = Téléphone, `4` = Email, `5` = Situation, `6` = Canal, `7` = Recommandé par, `8` = Besoin, `9` = Opt-in), pas par nom de colonne. Syntaxe Make à utiliser : `` {{1.`2`}} `` — les backticks sont **obligatoires**, sans eux `{{1.2}}` est interprété comme le nombre 1,2.
 - **Écriture** : `useColumnHeaders: true` (mapping par nom d'en-tête, insensible à l'ordre des colonnes) + `tableFirstRow: "A1:AL1"`. ⚠️ Cette plage doit couvrir **toute** la largeur du tableau, colonne A comprise : une plage partielle décale toutes les valeurs d'une colonne.
 - **Valeurs fixes** : `Source = "Site internet"`, `Statut pipeline = "À appeler"`, `Date d'ajout = maintenant`
@@ -203,3 +233,7 @@ Les prospects du site auront `Source = "Site internet"` (au lieu de "Google Maps
 | **V1.5** | 2026-08-03 | Formulaire du site branché sur le Google Form créé par Lucas : envoi silencieux (`fetch` no-cors) vers l'endpoint `formResponse` à chaque soumission, mapping de chaque champ vérifié via lien prérempli de test. Design et UX du site inchangés, le visiteur ne voit jamais le Google Form. Reste à construire : le n8n qui transfère les réponses vers le Vivier Prospects. |
 | **V1.6** | 2026-08-03 | Correction signalée sur iPad Safari : la case opt-in se cochait en interne mais ne l'affichait jamais visuellement (une règle CSS générique désactivait le rendu natif sans style de remplacement). Case redessinée en CSS, agrandie à 24px avec un vrai visuel coché, et toute la ligne rendue cliquable pour une meilleure cible tactile. |
 | — | 2026-08-03 | (Pas de version du site) Pipeline formulaire → Google Form → Sheet validé en conditions réelles : deux soumissions test depuis le site confirmées dans `Formulaire_Site_Reponses_Brutes`, tous champs correctement mappés. Cause du blocage initial identifiée et documentée : Google Form ni partagé publiquement ni publié (deux réglages distincts). |
+| **V1.7** | 2026-08-04 | Le `fetch` no-cors vers le Google Form ne passait plus de façon fiable (Google le filtre différemment d'une soumission de formulaire classique). Remplacé par un vrai formulaire HTML soumis vers un iframe caché, qui reproduit une soumission normale. |
+| **V1.8** | 2026-08-05 | Correction du débordement de l'adresse email dans sa carte (section Coordonnées) : un bloc texte en flex ne peut pas rétrécir sous la largeur de son contenu sans `min-width: 0`. |
+| **V1.9** | 2026-08-05 | Envoi instantané : le formulaire poste désormais vers un webhook Make (traitement immédiat) **en plus** du Google Form (conservé comme archive). Prospect visible dans le Vivier en quelques secondes au lieu de 8 h, et moins d'opérations Make consommées. |
+| **V2.0** | 2026-08-05 | **Refonte graphique complète**, contenu strictement inchangé. Nouvelle identité ardoise / laiton / mer, Fraunces + Karla, hero en photo pleine largeur, logo LV conservé et recoloré. Motif : la palette bleu nuit + or et le duo Playfair/Inter sont devenus la signature visuelle des sites générés par IA. Corrections au passage : fragment HTML orphelin hérité de la V1 (légende « Sans stratégie » affichée en clair sous le tableau), styles inline pointant vers des variables supprimées, texte de l'opt-in passant en majuscules, puces de contact disparues, chevauchement nom/CTA sous 430px. Tableau comparatif : tient désormais entièrement dans l'écran sur desktop, cartes empilées sous 768px. |
