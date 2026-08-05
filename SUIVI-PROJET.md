@@ -12,7 +12,7 @@ Lucas Vandeputte, Conseiller en Gestion de Patrimoine (CGP) en lancement, affili
 
 | Fichier | Description |
 |---|---|
-| `index.html` | Site principal — fichier autonome (HTML + CSS + JS + images en base64 intégrées). Palette bleu nuit + or. |
+| `index.html` | Site principal — fichier autonome (HTML + CSS + JS + images en base64 intégrées). Palette ardoise / laiton / mer depuis la V2.0. |
 | `docs/PASSATION_CLAUDE_CODE.pdf` | Note de passation reçue (contexte, décisions actées, reste à faire) — conservée comme référence historique. |
 | `SUIVI-PROJET.md` | Ce document — suivi d'avancement et historique des versions. |
 
@@ -39,8 +39,8 @@ Lucas Vandeputte, Conseiller en Gestion de Patrimoine (CGP) en lancement, affili
 
 ## 4. Structure du site (ordre des sections)
 
-1. **NAV** fixe — logo LV, liens ancres, téléphone 06 45 53 02 02 en or
-2. **HERO** — split 50/50, accroche + 3 bullets + CTA, photo RDV (base64)
+1. **NAV** fixe — logo LV, liens ancres, téléphone en laiton, menu burger sous 768px
+2. **HERO** — photo pleine largeur avec dégradé (depuis la V2.0 ; split 50/50 en V1), accroche + CTA + 3 chiffres clés
 3. **ACTUALITÉ** — 3 cards (réforme retraites, éducation financière, inflation)
 4. **SERVICES** — 6 cards (épargne, retraite, protection, défiscalisation, immobilier, transmission)
 5. **POURQUOI UN CGP** — tableau comparatif Seul / Banque / CGP
@@ -49,16 +49,18 @@ Lucas Vandeputte, Conseiller en Gestion de Patrimoine (CGP) en lancement, affili
 8. **À PROPOS** — photo Lucas + texte narratif long (volontairement non condensé en bullets, voir décisions actées) + badges + stats Cap Finances
 9. **TÉMOIGNAGES** — 3 cards (actuellement fictifs, à remplacer)
 10. **COORDONNÉES** — 3 cards cliquables (tél, email, zone)
-11. **FORMULAIRE CONTACT** — Prénom*, Nom*, Téléphone*, Email, Situation, Canal source* (8 options), opt-in téléphonique obligatoire, besoin libre
+11. **FORMULAIRE CONTACT** — Prénom*, Nom*, Téléphone*, Email, Situation, Canal source* (8 options), « Je viens de la part de qui ? » (conditionnel), besoin libre, opt-in obligatoire
 12. **FOOTER** — mentions légales MIA, logo LV, liens
 
 ## 5. Fonctionnalités JS en place
 
-- Particules dorées animées dans le hero (canvas)
+- ~~Particules dorées dans le hero~~ — retirées en V2.0 (illisibles sur la photo pleine largeur). Le code JS subsiste mais ne s'active plus, faute de canvas dans la page.
 - Fade-up au scroll (IntersectionObserver) sur les cards
 - Compteurs animés (30 min / 100% / 24h + stats Cap Finances)
+- Menu burger mobile (ouverture/fermeture, fermeture au clic sur un lien)
+- Champ « Je viens de la part de qui ? » affiché conditionnellement selon le canal source
 - Validation du formulaire (champs requis + checkbox opt-in obligatoire)
-- Message de confirmation post-envoi (pas encore branché à un backend)
+- Envoi double à la soumission : webhook Make (instantané) + Google Form (archive), puis message de confirmation
 
 ## 6. Images embarquées (base64)
 
