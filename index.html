@@ -1348,8 +1348,9 @@ footer{
 })();
 </script>
 <script>
-// ── ENVOI SILENCIEUX VERS GOOGLE FORM ────────────────────────────────────
+// ── ENVOI SILENCIEUX : WEBHOOK MAKE (instantané) + GOOGLE FORM (archive) ──
 (function(){
+  var MAKE_WEBHOOK = 'https://hook.eu1.make.com/6jfzyyk1vwtws5eu8yrqw8rqv1bw3ups';
   var GOOGLE_FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSdVCRtCaE4jloVGGWT-sjlfEtJZNzvZBScijKqcw6GSVWp8Rg/formResponse';
   var ENTRY_IDS = {
     prenom: 'entry.2035234336',
@@ -1383,13 +1384,25 @@ footer{
       hiddenForm.appendChild(input);
     }
 
+    var payload = {};
     Object.keys(ENTRY_IDS).forEach(function(fieldId){
       var el = document.getElementById(fieldId);
-      if(el && el.value) addField(ENTRY_IDS[fieldId], el.value);
+      var value = (el && el.value) ? el.value : '';
+      payload[fieldId] = value;
+      if(value) addField(ENTRY_IDS[fieldId], value);
     });
     var optinEl = document.getElementById('optin');
+    payload.optin = (optinEl && optinEl.checked) ? 'Oui' : '';
     if(optinEl && optinEl.checked) addField(OPTIN_ENTRY_ID, 'Oui');
 
+    // 1) Webhook Make : traitement instantane vers le Vivier Prospects.
+    fetch(MAKE_WEBHOOK, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    }).catch(function(){});
+
+    // 2) Google Form : archive brute, filet de securite si Make est indisponible.
     document.body.appendChild(hiddenForm);
     hiddenForm.submit();
     hiddenForm.remove();

@@ -67,13 +67,23 @@ Lucas Vandeputte, Conseiller en Gestion de Patrimoine (CGP) en lancement, affili
 ## 7. Formulaire — pipeline
 
 ```
-Formulaire site (branché ✅) → Google Form → Sheet "Formulaire_Site_Reponses_Brutes" (vérifié ✅)
-→ n8n (polling, à construire) → Vivier Prospects Google Sheets (onglet Prospects)
+Formulaire site → Google Form → Sheet "Formulaire_Site_Reponses_Brutes"
+→ Make "Site -> Vivier Prospects" (3×/jour) → Vivier_Prospects (onglet Prospects)
 ```
 
-**✅ Branché et vérifié en conditions réelles (03/08/2026)** : le formulaire du site poste silencieusement (`fetch` en mode `no-cors`) vers l'endpoint `formResponse` du Google Form à chaque soumission, sans changer le design ni l'UX du site. Le visiteur ne voit jamais le Google Form. Deux soumissions réelles depuis le site confirmées dans le Sheet, tous champs correctement mappés.
+**✅ CHAÎNE COMPLÈTE FONCTIONNELLE ET VÉRIFIÉE DE BOUT EN BOUT (05/08/2026)** — une soumission réelle depuis le site public traverse tout le pipeline et arrive dans le Vivier Prospects avec tous les champs correctement alignés.
 
-**Piège rencontré et résolu** : le Google Form n'était ni partagé publiquement (accès Drive "Restreint" par défaut) ni **publié** (étape Google Forms distincte du partage Drive classique) — les deux blocaient toute soumission, silencieusement côté site puisque `no-cors` ne remonte aucune erreur. Pense-bête pour tout futur Google Form du projet : vérifier (1) le partage Drive en "Anyone"/public, et (2) que le formulaire est bien **publié** (bouton dédié, distinct du partage), avant de brancher quoi que ce soit dessus.
+**Côté site** : le formulaire crée dynamiquement un vrai formulaire HTML, soumis en POST vers un `<iframe>` invisible (`hidden_google_form_target`). Le visiteur ne voit jamais le Google Form, le design et l'UX du site sont inchangés.
+
+### Pièges rencontrés et résolus (à ne pas re-subir)
+
+1. **Google Form ni partagé ni publié** — deux réglages Google *distincts* : (a) le partage Drive doit être sur "Tous les utilisateurs disposant du lien", (b) le formulaire doit être **publié** (bouton dédié dans Google Forms, indépendant du partage Drive). Tant que l'un des deux manque, toute soumission est rejetée **silencieusement**.
+
+2. **`fetch` en mode `no-cors` ne fonctionne pas de façon fiable** vers `formResponse` — Google le filtre différemment d'une soumission de formulaire classique. Remplacé par un vrai formulaire HTML + iframe caché. ⚠️ Effet pervers : le mode `no-cors` ne remonte **aucune erreur** au navigateur, donc le site affiche "succès" même quand Google rejette. Le message de confirmation ne prouve rien — toujours vérifier dans le Sheet.
+
+3. **L'éditeur Make écrase la configuration** — rouvrir un onglet Make resté ouvert depuis un moment et sauvegarder restaure l'état mémorisé par cet onglet, écrasant les modifications faites entre-temps via l'API. C'est arrivé le 04/08 : le scénario a été silencieusement remplacé par une version de test (mauvaise feuille cible, 4 champs sur 12, planning désactivé). **Ne pas modifier le scénario depuis un vieil onglet.**
+
+4. **Le déclencheur "Watch New Rows" suit par NUMÉRO DE LIGNE**, pas par contenu ni date. Vider la feuille source **désynchronise définitivement** le compteur (il attend la ligne 23 alors que la feuille en compte 2) et le scénario ne voit plus jamais rien, sans erreur apparente. Ce compteur ne se réinitialise pas via l'API : la seule solution fiable est de **recréer le scénario**.
 
 - Google Form : `https://docs.google.com/forms/d/e/1FAIpQLSdVCRtCaE4jloVGGWT-sjlfEtJZNzvZBScijKqcw6GSVWp8Rg/`
 - Sheet de réponses brutes : `Formulaire_Site_Reponses_Brutes` (dossier Drive `Prospects`)
@@ -91,7 +101,19 @@ Formulaire site (branché ✅) → Google Form → Sheet "Formulaire_Site_Repons
 | Votre besoin | `entry.567632254` |
 | Opt-in (case cochée envoyée comme `"Oui"`) | `entry.1741620044` |
 
-**⏳ Reste à construire** : le n8n qui lit les nouvelles lignes de `Formulaire_Site_Reponses_Brutes` et les ajoute dans l'onglet `Prospects` du Vivier Prospects (mapping vers les colonnes AH→AL, `Besoin` fusionné dans `Notes` avec le préfixe `Besoin initial (site) : ...`, `Source = "Site internet"`).
+### Scénario Make "Site -> Vivier Prospects" (id 6837081)
+
+Lit les nouvelles lignes de `Formulaire_Site_Reponses_Brutes` et les ajoute dans l'onglet `Prospects` du Vivier Prospects.
+
+- **Fréquence** : toutes les 8 h (3×/jour), soit ~90 opérations/mois — très large dans le quota gratuit de 1 000/mois
+- **Mapping** : les champs Google Sheets arrivent **indexés par position** (`0` = Horodateur, `1` = Prénom, `2` = Nom, `3` = Téléphone, `4` = Email, `5` = Situation, `6` = Canal, `7` = Recommandé par, `8` = Besoin, `9` = Opt-in), pas par nom de colonne. Syntaxe Make à utiliser : `` {{1.`2`}} `` — les backticks sont **obligatoires**, sans eux `{{1.2}}` est interprété comme le nombre 1,2.
+- **Écriture** : `useColumnHeaders: true` (mapping par nom d'en-tête, insensible à l'ordre des colonnes) + `tableFirstRow: "A1:AL1"`. ⚠️ Cette plage doit couvrir **toute** la largeur du tableau, colonne A comprise : une plage partielle décale toutes les valeurs d'une colonne.
+- **Valeurs fixes** : `Source = "Site internet"`, `Statut pipeline = "À appeler"`, `Date d'ajout = maintenant`
+- **Besoin** → écrit dans `Notes` avec le préfixe `Besoin initial (site) : ...`
+
+**⏳ Reste à faire** : notification (SMS ou email) à chaque nouveau prospect — aucune connexion SMS n'existe dans le compte Make, et Twilio/Vonage facturent au message. Piste gratuite à explorer : notification par email via la connexion Google déjà en place.
+
+**Note sur le format téléphone** : les numéros arrivent bruts (`0645530202`) et non formatés (`+33 6 45 53 02 02`). Une tentative de formatage automatique a échoué (fonctions de manipulation de texte Make difficiles à déboguer sans visibilité sur les valeurs intermédiaires) — mis de côté volontairement, sans impact fonctionnel.
 
 - **Canal source** (8 options) : Recommandation d'un proche / QR code / Carte NFC / Site internet / Réseaux sociaux / Salon ou événement / Bouche à oreille sport / Autre
 - **Je viens de la part de qui ?** (champ texte libre, optionnel) : n'apparaît que si "Recommandation d'un proche" est sélectionné dans le canal source (affichage conditionnel en JS, champ vidé si l'utilisateur change d'avis). Objectif : dans le Vivier Prospects, deux colonnes distinctes — le canal (ex. "Recommandation d'un proche") ET le nom du recommandeur — pour visualiser qui apporte le plus de prospects. Chaque champ de formulaire devient sa propre colonne dans Google Sheets indépendamment de sa visibilité conditionnelle sur le site : le fait qu'il soit caché par défaut ne change rien à la structure de données obtenue. À reporter comme colonne dédiée (ex. `Nom recommandeur`) dans le Vivier Prospects lors de la mise en place du pipeline n8n.
