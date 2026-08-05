@@ -550,14 +550,14 @@ footer{
 /* ─── COORDONNÉES ────────────────────────────────────────── */
 .coords{background:var(--bleu);padding:56px 5%}
 .coords-inner{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;max-width:800px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:20px;max-width:1020px;margin:0 auto;
 }
 .coord-card{
   background:rgba(255,255,255,0.04);
   border:1px solid rgba(201,168,76,0.2);
-  border-radius:6px;padding:28px 24px;
-  display:flex;align-items:center;gap:18px;
+  border-radius:6px;padding:28px 22px;
+  display:flex;align-items:center;gap:16px;
   transition:background .2s;text-decoration:none;
 }
 .coord-card:hover{background:rgba(255,255,255,0.08)}
@@ -569,8 +569,9 @@ footer{
   flex-shrink:0;
 }
 .coord-icon svg{width:20px;height:20px;stroke:var(--or);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.coord-card > div:not(.coord-icon){min-width:0}
 .coord-label{font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
-.coord-value{font-size:15px;font-weight:500;color:#fff}
+.coord-value{font-size:15px;font-weight:500;color:#fff;overflow-wrap:anywhere;line-height:1.4}
 
 /* ─── RESPONSIVE ─────────────────────────────────────────── */
 
