@@ -178,13 +178,36 @@ section{padding:104px 5%}
 }
 .news-card h3{font-size:19px;color:var(--foam);line-height:1.22;margin-bottom:11px}
 .news-card p{font-size:15px;color:#C6D0D3;line-height:1.62}
-.news-signal{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--brass-l);margin-right:8px;vertical-align:middle}
+/* bloc de mise en avant en bas de chaque actualite (et non une pastille) */
+.news-signal{
+  margin-top:16px;padding:14px 16px;
+  background:rgba(196,169,122,.12);
+  border-left:2px solid var(--brass-l);
+  font-size:14px;line-height:1.6;color:#DDE4E6;
+}
 
 /* ─── SERVICES ────────────────────────────────────────────── */
 .services{background:var(--foam)}
 .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2px;margin-top:48px;background:var(--foam-2)}
 .service-card{background:var(--foam);padding:34px 30px 32px;transition:background .22s}
 .service-card:hover{background:#fff}
+/* "A qui je m'adresse" : 5 profils — sans reglage, une grille a 3 colonnes
+   laisse une case vide. On repartit 3 + 2 en occupant toute la largeur. */
+@media(min-width:1000px){
+  .audience-grid{grid-template-columns:repeat(6,1fr)}
+  .audience-grid > .service-card{grid-column:span 2}
+  .audience-grid > .service-card:nth-child(4),
+  .audience-grid > .service-card:nth-child(5){grid-column:span 3}
+}
+@media(min-width:769px) and (max-width:999px){
+  .audience-grid{grid-template-columns:repeat(2,1fr)}
+  .audience-grid > .service-card:nth-child(5){grid-column:span 2}
+  /* meme correctif pour les grilles a 3 elements (actualites, temoignages) :
+     en 2 colonnes le 3e laisse un trou, on lui fait occuper la ligne entiere */
+  .news-grid,.testimonials-grid{grid-template-columns:repeat(2,1fr)}
+  .news-grid > .news-card:nth-child(3),
+  .testimonials-grid > .testi-card:nth-child(3){grid-column:span 2}
+}
 .service-icon{
   width:40px;height:40px;margin-bottom:18px;
   display:flex;align-items:center;justify-content:center;
@@ -232,18 +255,24 @@ section{padding:104px 5%}
 .process-photo{overflow:hidden;aspect-ratio:4/5;background:var(--sea)}
 .process-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:saturate(.75) contrast(1.05)}
 .process-steps{display:flex;flex-direction:column;gap:0}
-.process-step{display:grid;grid-template-columns:52px 1fr;gap:20px;padding:24px 0;border-top:1px solid var(--foam-2);position:relative}
-.process-step:first-child{border-top:none}
-.process-step-left{display:flex;flex-direction:column;align-items:center}
-.process-step-num{
-  font-family:var(--serif);font-weight:600;font-size:16px;
-  width:38px;height:38px;border-radius:2px;
-  background:var(--slate);color:var(--brass-l);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+.process-step{display:grid;grid-template-columns:46px 1fr;gap:22px;padding:26px 0;border-top:1px solid var(--foam-2)}
+.process-step:first-child{border-top:none;padding-top:4px}
+.process-step-left{display:flex;flex-direction:column;align-items:center;gap:10px}
+.process-step-icon{
+  width:46px;height:46px;border-radius:2px;flex-shrink:0;
+  background:var(--slate);
+  display:flex;align-items:center;justify-content:center;
 }
-.process-step-icon{display:none}
-.process-step-line{display:none}
-.process-step-content{padding-top:2px}
+.process-step-icon svg{width:20px;height:20px;stroke:var(--brass-l);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+/* trait de liaison entre les etapes */
+.process-step-line{flex:1;width:1px;background:var(--foam-2);min-height:12px}
+.process-step:last-child .process-step-line{display:none}
+.process-step-content{padding-top:3px;min-width:0}
+/* "Etape 01" est un libelle texte, pas une pastille */
+.process-step-num{
+  font-size:10.5px;font-weight:700;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--brass);margin-bottom:7px;
+}
 .process-step-title{font-family:var(--serif);font-weight:600;font-size:19px;color:var(--slate);margin-bottom:7px;line-height:1.25}
 .process-step-desc{font-size:15px;color:var(--texte-sec);line-height:1.64}
 
@@ -309,7 +338,8 @@ section{padding:104px 5%}
 .testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:44px}
 .testi-card{background:var(--slate-l);padding:30px 28px;border-radius:2px;border-top:2px solid var(--brass)}
 .testi-stars{display:flex;gap:3px;margin-bottom:15px}
-.testi-star{color:var(--brass-l);font-size:14px}
+/* ce sont des <svg> : sans fill, ils s'affichent en noir par defaut */
+.testi-star{width:15px;height:15px;fill:var(--brass-l);flex-shrink:0}
 .testi-text{font-size:15.5px;color:#CBC7C0;line-height:1.68;font-style:italic;margin-bottom:20px}
 .testi-author{display:flex;align-items:center;gap:12px}
 .testi-avatar{
@@ -836,7 +866,7 @@ footer{background:var(--slate-d);padding:48px 5% 42px;border-top:1px solid rgba(
       <h2 class="section-title" style="margin-bottom:12px">Le conseil patrimonial<br>n'est pas réservé aux grandes fortunes</h2>
       <div class="gold-rule"></div>
       <p class="section-sub" style="margin-bottom:48px">Que vous ayez 5 000€ ou 500 000€ d'épargne, la question est la même — est-ce qu'elle travaille vraiment pour vous ? <strong style="color:var(--slate);font-weight:700">Ma rémunération est prise en charge par les compagnies partenaires. Pour vous, c'est entièrement gratuit.</strong></p>
-      <div class="services-grid">
+      <div class="services-grid audience-grid">
 
         <div class="service-card fade-up">
           <div class="service-icon">
