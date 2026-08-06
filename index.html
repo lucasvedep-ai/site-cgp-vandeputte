@@ -698,8 +698,8 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
           <div class="hero-stat-label">Gratuit &amp; sans engagement</div>
         </div>
         <div>
-          <div class="hero-stat-val">24h</div>
-          <div class="hero-stat-label">Délai de rappel</div>
+          <div class="hero-stat-val">Rapide</div>
+          <div class="hero-stat-label">Prise de contact</div>
         </div>
       </div>
     </div>
@@ -1192,7 +1192,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
       <span class="section-eyebrow">Bilan gratuit</span>
       <h2 class="section-title">Parlons de votre situation</h2>
       <div class="gold-rule"></div>
-      <p class="section-sub" style="margin-bottom:36px">Laissez-moi vos coordonnées, je vous rappelle sous 24h pour un premier échange de 30 minutes, gratuit et sans engagement.</p>
+      <p class="section-sub" style="margin-bottom:36px">Laissez-moi vos coordonnées, je reviens rapidement vers vous pour un premier échange de 30 minutes, gratuit et sans engagement.</p>
       <ul class="contact-reasons">
         <li>Vous voulez savoir si votre épargne est bien placée</li>
         <li>Vous préparez un projet immobilier ou une retraite</li>
@@ -1268,7 +1268,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
       <div class="form-success" id="formSuccess">
         <div class="form-success-icon">✓</div>
         <h3>Message bien reçu !</h3>
-        <p>Je vous rappelle dans les 24h pour notre échange gratuit de 30 minutes.</p>
+        <p>Je reviens rapidement vers vous pour notre échange gratuit de 30 minutes.</p>
       </div>
     </div>
   </div>
@@ -1479,7 +1479,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
     entries.forEach(function(e){
       if(!e.isIntersecting) return;
       var stats = document.querySelectorAll('.hero-stat-val');
-      var data = [{pre:'',val:30,suf:' min'},{pre:'',val:100,suf:'%'},{pre:'',val:24,suf:'h'}];
+      var data = [{pre:'',val:30,suf:' min'},{pre:'',val:100,suf:'%'}];
       stats.forEach(function(el,i){ if(data[i]) animCount(el,data[i],1200); });
       var capfVals = document.querySelectorAll('.capf-stat-val');
       var capfData = [{pre:'+',val:150000,suf:''},{pre:'',val:22,suf:' Mds €'},{pre:'+',val:20,suf:' ans'}];
