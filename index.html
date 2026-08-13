@@ -522,15 +522,6 @@ section{padding:104px 5%}
 }
 .btn-submit:hover{background:var(--brass);color:var(--slate-d);transform:translateY(-1px)}
 .form-rgpd{font-size:12px;color:var(--texte-sec);line-height:1.6;margin-top:15px}
-.form-success{display:none;text-align:center;padding:34px 0}
-.form-success-icon{
-  width:56px;height:56px;border-radius:50%;
-  background:rgba(156,131,85,.13);border:1px solid var(--brass);
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 16px;font-size:24px;color:var(--brass);
-}
-.form-success h3{font-size:21px;color:var(--slate);margin-bottom:8px}
-.form-success p{font-size:15px;color:var(--texte-sec)}
 
 /* ─── FOOTER ──────────────────────────────────────────────── */
 footer{background:var(--slate-d);padding:48px 5% 42px;border-top:1px solid rgba(237,233,225,.1)}
@@ -1354,11 +1345,6 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
         <button type="submit" class="btn-submit">Je veux être rappelé →</button>
         <p class="form-rgpd">Vos données sont utilisées uniquement pour vous recontacter dans le cadre de votre demande. Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression. Aucune cession à des tiers. <a href="confidentialite.html" style="color:inherit;text-decoration:underline">Politique de confidentialité complète</a>.</p>
       </form>
-      <div class="form-success" id="formSuccess">
-        <div class="form-success-icon">✓</div>
-        <h3>Message bien reçu !</h3>
-        <p>Je reviens rapidement vers vous pour notre échange gratuit de 30 minutes.</p>
-      </div>
     </div>
   </div>
 </section>
@@ -1448,19 +1434,23 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
     if(optinEl && optinEl.checked) addField(OPTIN_ENTRY_ID, 'Oui');
 
     // 1) Webhook Make : traitement instantane vers le Vivier Prospects.
+    // keepalive:true : la requete continue meme si la page se decharge
+    // juste apres (on redirige vers la page de remerciement ci-dessous).
     fetch(MAKE_WEBHOOK, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      keepalive: true
     }).catch(function(){});
 
     // 2) Google Form : archive brute, filet de securite si Make est indisponible.
     document.body.appendChild(hiddenForm);
     hiddenForm.submit();
-    hiddenForm.remove();
 
-    form.style.display = 'none';
-    document.getElementById('formSuccess').style.display = 'block';
+    // Court delai pour laisser les deux envois partir sur le reseau avant
+    // de quitter la page (la soumission de hiddenForm passe par un iframe,
+    // detruit avec la page si on redirige trop vite).
+    setTimeout(function(){ window.location.href = 'merci.html'; }, 400);
   });
 })();
 </script>

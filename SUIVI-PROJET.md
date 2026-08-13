@@ -13,6 +13,11 @@ Lucas Vandeputte, Conseiller en Gestion de Patrimoine (CGP) en lancement, affili
 | Fichier | Description |
 |---|---|
 | `index.html` | Site principal — fichier autonome (HTML + CSS + JS + images en base64 intégrées). Palette ardoise / laiton / mer depuis la V2.0. |
+| `confidentialite.html` | Politique de confidentialité RGPD, depuis la V2.5. `noindex`. |
+| `merci.html` | Page de remerciement après soumission du formulaire, depuis la V2.13. `noindex`. |
+| `404.html` | Page d'erreur personnalisée, reconnue automatiquement par GitHub Pages, depuis la V2.13. |
+| `robots.txt` | Déclare le sitemap aux moteurs de recherche, depuis la V2.13. |
+| `sitemap.xml` | Limité à la page d'accueil, depuis la V2.13. |
 | `docs/PASSATION_CLAUDE_CODE.pdf` | Note de passation reçue (contexte, décisions actées, reste à faire) — conservée comme référence historique. |
 | `SUIVI-PROJET.md` | Ce document — suivi d'avancement et historique des versions. |
 
@@ -208,7 +213,12 @@ Les prospects du site auront `Source = "Site internet"` (au lieu de "Google Maps
 - [ ] Remplacer les images base64 par des URLs hébergées (allègement du fichier)
 - [ ] Affiner le responsive sur très petit mobile
 - [x] Politique de confidentialité RGPD (voir V2.5) — reste : compléter avec le N° ORIAS personnel de Lucas une fois obtenu
-- [ ] SEO : balises meta, title, description, Open Graph (en cours — liste de 19 points de suivi établie avec Lucas le 12/08, validation point par point)
+- Liste des 19 points SEO/technique établie avec Lucas le 12/08, validée un par un avant implémentation :
+  - [x] Meta description (V2.9) · Schema Local Business (V2.10) · CTA sticky mobile (V2.11) · FAQ (V2.12) · Page de remerciement, 404 personnalisée, robots.txt + sitemap.xml (V2.13)
+  - [ ] Mis de côté à la demande de Lucas : avis clients (pas de profil Google Business), carte + itinéraire (pas d'adresse fixe à afficher), Google Analytics + bandeau de consentement RGPD, temps de réponse affiché, images de partage RS (Open Graph — en attente de son LinkedIn)
+  - [ ] En attente de contenu : études de cas (2-3 vraies situations clients anonymisées à fournir par Lucas)
+  - Non applicable au site actuel (page unique) : titres de pages uniques, fil d'Ariane, liens internes — déjà couverts par la nav en ancre
+  - [x] Alt text images — déjà en place avant la liste
 
 ## 11. Manière de travailler avec Lucas
 
@@ -250,6 +260,7 @@ Les prospects du site auront `Source = "Site internet"` (au lieu de "Google Maps
 | **V2.10** | 2026-08-13 | Ajout du schema `FinancialService` (JSON-LD), point 3 de la liste des 19, validé par Lucas avant implémentation. Choix notables : aucune adresse de rue (activité sans vitrine physique, cohérent avec la mise de côté du point « carte + itinéraire ») ; zone d'intervention Lorient/Morbihan + France entière, reprise à l'identique du texte déjà affiché sur le site ; ORIAS 07 023 269 et SIREN rattachés à Capfinances comme `parentOrganization`, pas à Lucas personnellement, car son propre numéro ORIAS reste « à compléter » dans le footer ; aucun `aggregateRating` fictif, cohérent avec le retrait de la section Témoignages (V2.7). JSON-LD validé syntaxiquement (`json.loads`). |
 | **V2.11** | 2026-08-13 | Ajout d'un CTA sticky mobile, point 5 de la liste des 19, validé par Lucas avant implémentation. Barre fixe en bas d'écran (« Prendre RDV → », même texte que le CTA hero depuis la V2.8) sur mobile uniquement (≤768px), masquée par défaut, révélée une fois le hero quitté (`IntersectionObserver`) et masquée à nouveau dès que le formulaire de contact entre en vue — pas de doublon avec le CTA hero ni le formulaire lui-même. **Bug trouvé et corrigé avant publication** : le script référençant `#stickyCta` avait été placé avant la div dans le DOM, donc `getElementById` renvoyait `null` au moment de l'exécution et la fonction sortait silencieusement sans jamais afficher la barre — repéré en testant avec Playwright (capture d'écran + inspection des classes CSS), corrigé en replaçant la div avant le premier `<script>` du body. Vérifié à 375px : barre masquée en haut de page et sur le formulaire, visible en milieu de page ; confirmé invisible sur desktop (1280px) ; menu hamburger toujours fonctionnel. |
 | **V2.12** | 2026-08-13 | Ajout de la section FAQ, point 10 de la liste des 19, 8 questions/réponses validées par Lucas avant implémentation (deux réponses réécrites sur sa demande : le premier RDV n'est pas seul gratuit, tout l'accompagnement l'est, et les deux précisent que la rémunération vient des banques et partenaires, jamais du client). Placée dans le slot laissé libre par le retrait des Témoignages (V2.7), entre À propos et Coordonnées. Accordéon natif (`<details>`/`<summary>`, sans JS), lien "FAQ" ajouté à la nav desktop et mobile. Balisage `FAQPage` (JSON-LD) ajouté en tête, texte strictement identique à ce qui est affiché — condition requise par Google pour le rich snippet. Vérifié : 8 questions présentes, ouverture/fermeture de l'accordéon, ancre de nav, rendu mobile (375px) et desktop (1280px), les deux blocs JSON-LD (FinancialService + FAQPage) valides syntaxiquement. |
+| **V2.13** | 2026-08-13 | Trois points « Utile ensuite » de la liste des 19, traités ensemble à la demande de Lucas (Google Analytics + bandeau de consentement mis de côté, temps de réponse et images de partage RS reportés) : **(1) Page de remerciement** (`merci.html`) — le formulaire redirige désormais vers une vraie page dédiée au lieu d'un message affiché en place, avec rappel des prochaines étapes et numéro de téléphone en filet de secours ; div/CSS `form-success` devenus inutiles, retirés. Détail technique : `fetch` vers le webhook Make passe en `keepalive:true` et la redirection est retardée de 400 ms après l'envoi des deux formulaires (Make + Google Form via iframe caché), pour laisser les deux requêtes partir sur le réseau avant que la page ne se décharge — vérifié avec Playwright en interceptant les deux endpoints : les deux requêtes partent bien avant la redirection vers `merci.html`. **(2) 404 personnalisée** (`404.html`) — reconnue automatiquement par GitHub Pages, à l'identité du site, lien de retour en chemin absolu (`/site-cgp-vandeputte/`) plutôt que relatif, pour rester correct quel que soit le niveau de profondeur de l'URL cassée. **(3) `robots.txt` + `sitemap.xml`** — `robots.txt` seul n'aurait eu aucun intérêt sans sitemap à déclarer (c'est son seul vrai bénéfice sur ce site), donc les deux ont été créés ensemble ; sitemap limité à la page d'accueil (`confidentialite.html` et `merci.html` sont en `noindex`, pas dans le sitemap). Les trois fichiers HTML validés (`HTMLParser`), le sitemap validé en XML. |
 
 ## 12. Bugs de la V2.0 — diagnostic (2026-08-06)
 
