@@ -33,6 +33,54 @@
   "knowsAbout": ["Épargne", "Retraite", "Fiscalité", "Immobilier", "Transmission de patrimoine", "Protection"]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Le premier rendez-vous est-il vraiment gratuit ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Oui — et pas seulement le premier. Tous mes conseils et rendez-vous sont gratuits pour vous, du début à la fin de notre accompagnement, car ce sont les banques et mes partenaires qui me rémunèrent, jamais vous." }
+    },
+    {
+      "@type": "Question",
+      "name": "Comment êtes-vous rémunéré ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Par les banques et mes partenaires, jamais directement par vous." }
+    },
+    {
+      "@type": "Question",
+      "name": "Suis-je obligé de souscrire un produit après le rendez-vous ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Non. Vous repartez avec une vision claire de votre situation, que vous décidiez d'aller plus loin avec moi ou non." }
+    },
+    {
+      "@type": "Question",
+      "name": "À partir de quel patrimoine peut-on vous consulter ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Il n'y a pas de seuil. Le conseil patrimonial est utile dès qu'on a des questions sur son épargne, sa retraite ou sa fiscalité — pas seulement pour les grands patrimoines." }
+    },
+    {
+      "@type": "Question",
+      "name": "Êtes-vous indépendant d'une banque ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Oui. Comme CGP mandataire Capfinances, je ne suis lié à aucun établissement bancaire : je compare les solutions de plusieurs compagnies pour choisir ce qui correspond à votre situation, pas à un objectif commercial interne." }
+    },
+    {
+      "@type": "Question",
+      "name": "Le rendez-vous se passe-t-il en visio ou en présentiel ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Les deux sont possibles, selon votre préférence — on en discute lors de la prise de contact." }
+    },
+    {
+      "@type": "Question",
+      "name": "Intervenez-vous seulement à Lorient ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Mon activité est centrée sur Lorient et le Morbihan, mais j'accompagne aussi des clients partout en France à distance." }
+    },
+    {
+      "@type": "Question",
+      "name": "Êtes-vous réglementé ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Oui. J'exerce comme Mandataire d'Intermédiaire en Assurance (MIA), affilié Capfinances, immatriculé à l'ORIAS — un statut encadré, avec des obligations de conseil documenté envers vous." }
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Karla:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -356,6 +404,23 @@ section{padding:104px 5%}
   font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
   color:#B4B6B3;border:1px solid rgba(237,233,225,.22);padding:7px 12px;border-radius:2px;
 }
+
+/* ─── FAQ ─────────────────────────────────────────────────── */
+.faq-list{max-width:760px;margin:44px auto 0}
+.faq-item{border-bottom:1px solid var(--foam-2)}
+.faq-item summary{
+  cursor:pointer;padding:20px 4px;list-style:none;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  font-family:var(--serif);font-size:16.5px;font-weight:600;color:var(--slate);
+}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{
+  content:'+';font-size:22px;font-weight:400;color:var(--brass);flex-shrink:0;
+  transition:transform .2s ease;
+}
+.faq-item[open] summary::after{transform:rotate(45deg)}
+.faq-item summary:focus-visible{outline:2px solid var(--brass);outline-offset:4px}
+.faq-answer{padding:0 4px 22px;color:var(--texte-sec);font-size:14.5px;line-height:1.65;max-width:640px}
 
 /* ─── TÉMOIGNAGES ─────────────────────────────────────────── */
 .testimonials{background:var(--slate)}
@@ -681,6 +746,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
     <a href="#pourquoi">Pourquoi un CGP ?</a>
     <a href="#processus">Comment ça marche</a>
     <a href="#about">À propos</a>
+    <a href="#faq">FAQ</a>
     <a href="#contact">Contact</a>
     <a href="tel:0645530202" style="color:var(--brass);font-weight:700">06 45 53 02 02</a>
   </div>
@@ -693,6 +759,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
   <a href="#pourquoi">Pourquoi un CGP ?</a>
   <a href="#processus">Comment ça marche</a>
   <a href="#about">À propos</a>
+  <a href="#faq">FAQ</a>
   <a href="#contact">Contact</a>
   <a href="tel:0645530202" class="nav-mobile-tel">06 45 53 02 02</a>
 </div>
@@ -1121,6 +1188,56 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <span class="section-eyebrow">Questions fréquentes</span>
+  <h2 class="section-title">Avant de nous parler,<br>vous vous demandez sûrement</h2>
+  <div class="gold-rule"></div>
+  <div class="faq-list">
+
+    <details class="faq-item">
+      <summary>Le premier rendez-vous est-il vraiment gratuit ?</summary>
+      <p class="faq-answer">Oui — et pas seulement le premier. Tous mes conseils et rendez-vous sont gratuits pour vous, du début à la fin de notre accompagnement, car ce sont les banques et mes partenaires qui me rémunèrent, jamais vous.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Comment êtes-vous rémunéré ?</summary>
+      <p class="faq-answer">Par les banques et mes partenaires, jamais directement par vous.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Suis-je obligé de souscrire un produit après le rendez-vous ?</summary>
+      <p class="faq-answer">Non. Vous repartez avec une vision claire de votre situation, que vous décidiez d'aller plus loin avec moi ou non.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>À partir de quel patrimoine peut-on vous consulter ?</summary>
+      <p class="faq-answer">Il n'y a pas de seuil. Le conseil patrimonial est utile dès qu'on a des questions sur son épargne, sa retraite ou sa fiscalité — pas seulement pour les grands patrimoines.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Êtes-vous indépendant d'une banque ?</summary>
+      <p class="faq-answer">Oui. Comme CGP mandataire Capfinances, je ne suis lié à aucun établissement bancaire : je compare les solutions de plusieurs compagnies pour choisir ce qui correspond à votre situation, pas à un objectif commercial interne.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Le rendez-vous se passe-t-il en visio ou en présentiel ?</summary>
+      <p class="faq-answer">Les deux sont possibles, selon votre préférence — on en discute lors de la prise de contact.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Intervenez-vous seulement à Lorient ?</summary>
+      <p class="faq-answer">Mon activité est centrée sur Lorient et le Morbihan, mais j'accompagne aussi des clients partout en France à distance.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Êtes-vous réglementé ?</summary>
+      <p class="faq-answer">Oui. J'exerce comme Mandataire d'Intermédiaire en Assurance (MIA), affilié Capfinances, immatriculé à l'ORIAS — un statut encadré, avec des obligations de conseil documenté envers vous.</p>
+    </details>
+
   </div>
 </section>
 
