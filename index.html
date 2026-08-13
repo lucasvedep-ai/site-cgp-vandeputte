@@ -1408,6 +1408,19 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
   };
   var OPTIN_ENTRY_ID = 'entry.1741620044';
 
+  // Provenance QR : ?lieu=... dans l'URL identifie le sticker physique
+  // scanné (un lien différent par lieu de pose, même visuel). Glissé dans
+  // le champ "besoin" -> colonne Notes existante, sans toucher au mapping
+  // Make ni au Google Form.
+  var qrLieu = new URLSearchParams(window.location.search).get('lieu');
+  if(qrLieu){
+    var canalEl = document.getElementById('canal');
+    if(canalEl){
+      canalEl.value = 'QR code (vitrine / commerce)';
+      canalEl.dispatchEvent(new Event('change', {bubbles:true}));
+    }
+  }
+
   document.getElementById('contactForm').addEventListener('submit', function(e){
     e.preventDefault();
     var form = this;
@@ -1432,6 +1445,9 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
     Object.keys(ENTRY_IDS).forEach(function(fieldId){
       var el = document.getElementById(fieldId);
       var value = (el && el.value) ? el.value : '';
+      if(fieldId === 'besoin' && qrLieu){
+        value = 'Provenance QR : ' + qrLieu + (value ? '\n' + value : '');
+      }
       payload[fieldId] = value;
       if(value) addField(ENTRY_IDS[fieldId], value);
     });
