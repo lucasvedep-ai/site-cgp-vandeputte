@@ -46,7 +46,7 @@
     {
       "@type": "Question",
       "name": "Comment êtes-vous rémunéré ?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Par les banques et mes partenaires, jamais directement par vous." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Par la banque ou le partenaire que vous aurez choisi, jamais directement par vous." }
     },
     {
       "@type": "Question",
@@ -303,6 +303,7 @@ section{padding:104px 5%}
 .why{background:var(--foam-3)}
 .why-intro{max-width:640px;margin-bottom:48px}
 .why-table-wrap{border:1px solid var(--foam-2);background:#fff}
+.why-mobile{display:none}
 .why-table{width:100%;border-collapse:collapse;font-size:14.5px;table-layout:fixed}
 .why-table thead tr{background:var(--slate)}
 .why-table thead th{
@@ -682,27 +683,23 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
   .about-flex{flex-direction:column}
   .capf-stats{gap:26px}
 
-  /* Tableau comparatif -> cartes empilées, aucun scroll horizontal */
-  .why-table-wrap{border:none;background:transparent}
-  .why-table{width:100%;table-layout:auto;font-size:14.5px;border-spacing:0 12px;border-collapse:separate}
-  .why-table thead{display:none}
-  .why-table tbody tr{display:block;border:1px solid var(--foam-2);border-radius:2px;overflow:hidden;background:#fff}
-  .why-table tbody tr:hover{background:#fff}
-  .why-table td{display:block;padding:12px 16px 12px 44%;position:relative;min-height:20px}
-  .why-table td:first-child{
-    padding:14px 16px;background:var(--slate);color:var(--foam);
-    font-family:var(--serif);font-weight:600;font-size:16px;
+  /* Tableau comparatif -> onglets Seul/Banque/CGP sur mobile */
+  .why-table-wrap{display:none}
+  .why-mobile{display:block}
+  .why-tabs{display:flex;gap:4px;background:var(--foam-3);padding:4px;border-radius:4px;margin-bottom:4px}
+  .why-tab-btn{
+    flex:1;border:none;background:none;padding:10px 4px;border-radius:3px;
+    font-family:var(--sans);font-size:12.5px;font-weight:700;color:var(--texte-sec);cursor:pointer;
+    transition:background .18s ease,color .18s ease;
   }
-  .why-table td:not(:first-child){border-top:1px solid var(--foam-2)}
-  .why-table td:not(:first-child)::before{
-    content:attr(data-label);
-    position:absolute;left:16px;top:12px;width:38%;
-    font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
-    color:var(--texte-sec);line-height:1.4;
+  .why-tab-btn.active{background:var(--slate);color:var(--foam)}
+  .why-tab-btn.why-tab-you.active{background:var(--brass);color:var(--slate-d)}
+  .why-tab-row{
+    display:flex;gap:12px;padding:14px 4px;border-top:1px solid var(--foam-2);font-size:14px;
   }
-  .why-table td.col-you{background:rgba(156,131,85,.09);border-left:none;border-right:none}
-  .why-table td.col-you::before{color:var(--brass)}
-  .why-table tbody tr:last-child td.col-you{border-bottom:none}
+  .why-tab-row:first-child{border-top:none}
+  .why-tab-row-label{font-weight:700;color:var(--slate);flex:0 0 42%}
+  .why-tab-row-val{color:var(--texte-sec);flex:1}
 }
 @media(max-width:430px){
   /* bouton "Bilan gratuit" retire du nav : assez de place pour garder nom + sous-titre */
@@ -961,6 +958,15 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
     </table>
   </div>
 
+  <div class="why-mobile" id="whyMobile">
+    <div class="why-tabs" id="whyTabs">
+      <button type="button" class="why-tab-btn" data-col="2">Seul</button>
+      <button type="button" class="why-tab-btn" data-col="3">Banque</button>
+      <button type="button" class="why-tab-btn why-tab-you active" data-col="4">✦ CGP (Lucas)</button>
+    </div>
+    <div class="why-tab-list" id="whyTabList"></div>
+  </div>
+
   <div class="why-cta">
     <a href="#contact" class="btn-primary" style="background:var(--slate);color:var(--foam)">Prendre rendez-vous gratuitement →</a>
     <p class="why-note">Le bilan patrimonial initial est entièrement gratuit et sans engagement. Vous repartez avec une vision claire de votre situation, quoi qu'il arrive.</p>
@@ -1196,7 +1202,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
 
     <details class="faq-item">
       <summary>Comment êtes-vous rémunéré ?</summary>
-      <p class="faq-answer">Par les banques et mes partenaires, jamais directement par vous.</p>
+      <p class="faq-answer">Par la banque ou le partenaire que vous aurez choisi, jamais directement par vous.</p>
     </details>
 
     <details class="faq-item">
@@ -1595,6 +1601,42 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
     });
   },{threshold:0.4});
   rules.forEach(function(el){ obs.observe(el); });
+})();
+
+// ── COMPARATIF « POURQUOI UN CGP » : ONGLETS SUR MOBILE ─────────────────
+// Lit directement les lignes du <table> desktop (source unique du contenu)
+// pour construire les onglets Seul / Banque / CGP affichés sur mobile.
+(function(){
+  var tabs = document.getElementById('whyTabs');
+  var list = document.getElementById('whyTabList');
+  var rows = document.querySelectorAll('.why-table tbody tr');
+  if(!tabs || !list || !rows.length) return;
+
+  var data = Array.prototype.map.call(rows, function(tr){
+    var cells = tr.querySelectorAll('td');
+    return {
+      crit: cells[0].innerHTML,
+      2: cells[1].innerHTML,
+      3: cells[2].innerHTML,
+      4: cells[3].innerHTML
+    };
+  });
+
+  function render(col){
+    list.innerHTML = data.map(function(d){
+      return '<div class="why-tab-row"><div class="why-tab-row-label">'+d.crit+'</div><div class="why-tab-row-val">'+d[col]+'</div></div>';
+    }).join('');
+  }
+
+  tabs.addEventListener('click', function(e){
+    var btn = e.target.closest('.why-tab-btn');
+    if(!btn) return;
+    tabs.querySelectorAll('.why-tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    render(btn.dataset.col);
+  });
+
+  render('4');
 })();
 
 // ── CTA STICKY MOBILE ────────────────────────────────────────────────────
