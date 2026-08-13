@@ -168,6 +168,7 @@ nav{
   font-size:14.5px;font-weight:600;text-decoration:none;transition:background .2s;
 }
 .btn-secondary:hover{background:rgba(237,233,225,.1)}
+.sticky-cta{display:none}
 .hero-signature{display:none}
 .hero-stats{display:flex;gap:52px;margin-top:44px;flex-wrap:wrap}
 .hero-stat-val{font-family:var(--serif);font-weight:600;font-size:34px;line-height:1;color:var(--brass-l)}
@@ -564,6 +565,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
   .hero-photo-wrap img,.hero-eyebrow,.hero h1,.hero-sub,.hero-actions,.hero-stats,.hero-photo-or-badge{animation:none}
   .gold-rule{transform:none;transition:none}
   .about-photo img,.process-photo img,.testi-card{transition:none}
+  .sticky-cta{transition:none}
 }
 
 /* ─── RESPONSIVE ──────────────────────────────────────────── */
@@ -590,6 +592,21 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
   .nav-logo svg{width:32px;height:32px}
   .nav-toggle{display:flex}
   .nav-mobile-panel{top:62px}
+  .sticky-cta{
+    display:block;position:fixed;left:0;right:0;bottom:0;z-index:90;
+    background:var(--slate-d);
+    padding:12px 5% calc(12px + env(safe-area-inset-bottom));
+    box-shadow:0 -10px 24px -12px rgba(15,19,21,.35);
+    transform:translateY(100%);
+    transition:transform .3s cubic-bezier(.22,.7,.3,1);
+  }
+  .sticky-cta.visible{transform:translateY(0)}
+  .sticky-cta-btn{
+    display:block;width:100%;text-align:center;
+    background:var(--brass);color:var(--slate-d);
+    padding:14px;border-radius:2px;
+    font-size:15px;font-weight:700;text-decoration:none;
+  }
   .hero{min-height:82vh;padding-top:96px}
   .hero-split{padding-bottom:48px}
   .hero h1{font-size:33px}
@@ -1248,6 +1265,10 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
   </div>
 </footer>
 
+<div class="sticky-cta" id="stickyCta">
+  <a href="#contact" class="sticky-cta-btn">Prendre RDV →</a>
+</div>
+
 <script>
 // ── ZONE DE CLIC ÉLARGIE POUR L'OPT-IN (toute la ligne, pas juste la case) ─
 (function(){
@@ -1469,6 +1490,23 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
   rules.forEach(function(el){ obs.observe(el); });
 })();
 
+// ── CTA STICKY MOBILE ────────────────────────────────────────────────────
+(function(){
+  var bar = document.getElementById('stickyCta');
+  var hero = document.querySelector('.hero');
+  var contact = document.getElementById('contact');
+  if(!bar || !hero || !contact) return;
+  var pastHero = false, atContact = false;
+  function sync(){ bar.classList.toggle('visible', pastHero && !atContact); }
+  new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ pastHero = !e.isIntersecting; });
+    sync();
+  }).observe(hero);
+  new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ atContact = e.isIntersecting; });
+    sync();
+  },{threshold:0.15}).observe(contact);
+})();
 
 </script>
 
