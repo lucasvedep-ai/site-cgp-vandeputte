@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lucasvedep-ai.github.io/site-cgp-vandeputte/sitemap.xml
