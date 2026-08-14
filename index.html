@@ -45,8 +45,8 @@
     },
     {
       "@type": "Question",
-      "name": "Comment êtes-vous rémunéré ?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Par la banque ou le partenaire que vous aurez choisi, jamais directement par vous." }
+      "name": "Comment suis-je rémunéré ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Par la banque ou le partenaire que vous aurez choisi, jamais directement par vous. Le montant de cette rémunération est identique quel que soit l'établissement retenu : je n'ai donc aucun intérêt à vous orienter vers l'un plutôt qu'un autre." }
     },
     {
       "@type": "Question",
@@ -55,12 +55,12 @@
     },
     {
       "@type": "Question",
-      "name": "À partir de quel patrimoine peut-on vous consulter ?",
+      "name": "À partir de quel patrimoine est-ce que j'interviens ?",
       "acceptedAnswer": { "@type": "Answer", "text": "Il n'y a pas de seuil. Le conseil patrimonial est utile dès qu'on a des questions sur son épargne, sa retraite ou sa fiscalité — pas seulement pour les grands patrimoines." }
     },
     {
       "@type": "Question",
-      "name": "Êtes-vous indépendant d'une banque ?",
+      "name": "Suis-je indépendant d'une banque ?",
       "acceptedAnswer": { "@type": "Answer", "text": "Oui. Comme CGP mandataire Capfinances, je ne suis lié à aucun établissement bancaire : je compare les solutions de plusieurs compagnies pour choisir ce qui correspond à votre situation, pas à un objectif commercial interne." }
     },
     {
@@ -70,12 +70,12 @@
     },
     {
       "@type": "Question",
-      "name": "Intervenez-vous seulement à Lorient ?",
+      "name": "Est-ce que j'interviens seulement à Lorient ?",
       "acceptedAnswer": { "@type": "Answer", "text": "Mon activité est centrée sur Lorient et le Morbihan, mais j'accompagne aussi des clients partout en France à distance." }
     },
     {
       "@type": "Question",
-      "name": "Êtes-vous réglementé ?",
+      "name": "Suis-je réglementé ?",
       "acceptedAnswer": { "@type": "Answer", "text": "Oui. J'exerce comme Mandataire d'Intermédiaire en Assurance (MIA), affilié Capfinances, immatriculé à l'ORIAS — un statut encadré, avec des obligations de conseil documenté envers vous." }
     }
   ]
@@ -292,6 +292,7 @@ section{padding:104px 5%}
 }
 .service-icon svg{width:20px;height:20px;stroke:var(--brass);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .service-card h3{font-size:20px;margin-bottom:11px;line-height:1.22;color:var(--slate)}
+.service-card p.service-hook{font-size:15px;font-weight:700;color:var(--slate);line-height:1.4;margin-bottom:8px}
 .service-card p{font-size:15px;color:var(--texte-sec);line-height:1.64;margin-bottom:16px}
 .service-link{
   font-size:13.5px;font-weight:700;color:var(--brass);text-decoration:none;
@@ -681,6 +682,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
   .form-card{padding:26px 22px}
   .footer-inner{flex-direction:column;gap:18px}
   .about-flex{flex-direction:column}
+  .about-flex-item{flex:1 1 auto}
   .capf-stats{gap:26px}
 
   /* Tableau comparatif -> onglets Seul/Banque/CGP sur mobile */
@@ -841,6 +843,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
         <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
       </div>
       <h3>Épargne &amp; placements</h3>
+      <p class="service-hook">Votre épargne dort sur un compte qui ne rapporte presque rien ?</p>
       <p>Assurance-vie, PER, SCPI, fonds euro ou unités de compte — je vous aide à choisir les bons supports selon votre profil et vos objectifs.</p>
       <a href="#contact" class="service-link">En savoir plus →</a>
     </div>
@@ -850,6 +853,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       </div>
       <h3>Préparation retraite</h3>
+      <p class="service-hook">Vous ne savez pas à quoi ressemblera votre retraite ?</p>
       <p>Anticiper pour maintenir votre niveau de vie. Calcul de vos droits, stratégie de capitalisation, solutions individuelles adaptées.</p>
       <a href="#contact" class="service-link">En savoir plus →</a>
     </div>
@@ -859,6 +863,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
         <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </div>
       <h3>Protection de la famille</h3>
+      <p class="service-hook">En cas de coup dur, vos proches seraient-ils vraiment protégés ?</p>
       <p>Prévoyance, garantie décès, invalidité, perte d'emploi — protéger ce qui compte vraiment, au bon niveau et au bon prix.</p>
       <a href="#contact" class="service-link">En savoir plus →</a>
     </div>
@@ -868,7 +873,8 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
         <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       </div>
       <h3>Défiscalisation</h3>
-      <p>Loi Pinel, Malraux, Denormandie, FCPI, FIP — réduire légalement votre impôt tout en construisant un patrimoine durable.</p>
+      <p class="service-hook">Vous avez l'impression de payer trop d'impôts sans contrepartie ?</p>
+      <p>Loi Pinel, Malraux, Denormandie — réduire légalement votre impôt tout en construisant un patrimoine durable.</p>
       <a href="#contact" class="service-link">En savoir plus →</a>
     </div>
 
@@ -877,6 +883,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
         <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       </div>
       <h3>Immobilier &amp; crédit</h3>
+      <p class="service-hook">Vous avez un projet immobilier ou un crédit à optimiser ?</p>
       <p>Investissement locatif, résidence principale, renégociation de prêt — je vous accompagne de la stratégie au financement.</p>
       <a href="#contact" class="service-link">En savoir plus →</a>
     </div>
@@ -886,6 +893,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
         <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       </div>
       <h3>Transmission &amp; succession</h3>
+      <p class="service-hook">Vos héritiers paieront-ils trop de droits de succession ?</p>
       <p>Donation, démembrement, assurance-vie comme outil successoral — organiser la transmission de votre patrimoine en limitant les droits.</p>
       <a href="#contact" class="service-link">En savoir plus →</a>
     </div>
@@ -1201,8 +1209,8 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
     </details>
 
     <details class="faq-item">
-      <summary>Comment êtes-vous rémunéré ?</summary>
-      <p class="faq-answer">Par la banque ou le partenaire que vous aurez choisi, jamais directement par vous.</p>
+      <summary>Comment suis-je rémunéré ?</summary>
+      <p class="faq-answer">Par la banque ou le partenaire que vous aurez choisi, jamais directement par vous. Le montant de cette rémunération est identique quel que soit l'établissement retenu : je n'ai donc aucun intérêt à vous orienter vers l'un plutôt qu'un autre.</p>
     </details>
 
     <details class="faq-item">
@@ -1211,12 +1219,12 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
     </details>
 
     <details class="faq-item">
-      <summary>À partir de quel patrimoine peut-on vous consulter ?</summary>
+      <summary>À partir de quel patrimoine est-ce que j'interviens ?</summary>
       <p class="faq-answer">Il n'y a pas de seuil. Le conseil patrimonial est utile dès qu'on a des questions sur son épargne, sa retraite ou sa fiscalité — pas seulement pour les grands patrimoines.</p>
     </details>
 
     <details class="faq-item">
-      <summary>Êtes-vous indépendant d'une banque ?</summary>
+      <summary>Suis-je indépendant d'une banque ?</summary>
       <p class="faq-answer">Oui. Comme CGP mandataire Capfinances, je ne suis lié à aucun établissement bancaire : je compare les solutions de plusieurs compagnies pour choisir ce qui correspond à votre situation, pas à un objectif commercial interne.</p>
     </details>
 
@@ -1226,12 +1234,12 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(31,37,40,.35)}
     </details>
 
     <details class="faq-item">
-      <summary>Intervenez-vous seulement à Lorient ?</summary>
+      <summary>Est-ce que j'interviens seulement à Lorient ?</summary>
       <p class="faq-answer">Mon activité est centrée sur Lorient et le Morbihan, mais j'accompagne aussi des clients partout en France à distance.</p>
     </details>
 
     <details class="faq-item">
-      <summary>Êtes-vous réglementé ?</summary>
+      <summary>Suis-je réglementé ?</summary>
       <p class="faq-answer">Oui. J'exerce comme Mandataire d'Intermédiaire en Assurance (MIA), affilié Capfinances, immatriculé à l'ORIAS — un statut encadré, avec des obligations de conseil documenté envers vous.</p>
     </details>
 
